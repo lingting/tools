@@ -1,0 +1,9 @@
+root = true
+
+[*.*]
+charset = utf-8
+
+[*.{groovy, java, kt, kts, xml, xsd, html, js, jsp, md, properties, sh, sql, txt }]
+indent_style = space
+trim_trailing_whitespace = true
+insert_final_newline = true
