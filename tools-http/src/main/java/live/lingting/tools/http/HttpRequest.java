@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -29,6 +28,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import live.lingting.tools.core.util.CollectionUtils;
 import live.lingting.tools.core.util.FileUtils;
+import live.lingting.tools.core.util.HttpUtils;
 import live.lingting.tools.core.util.RandomUtils;
 import live.lingting.tools.core.util.StreamUtils;
 import live.lingting.tools.core.util.StringUtils;
@@ -38,6 +38,7 @@ import live.lingting.tools.http.enums.HttpContentType;
 import live.lingting.tools.http.enums.HttpHeader;
 import live.lingting.tools.http.enums.HttpMethod;
 import live.lingting.tools.http.exception.HttpException;
+import live.lingting.tools.json.JacksonUtils;
 
 /**
  * @author lingting
@@ -175,6 +176,9 @@ public class HttpRequest {
 	}
 
 	public HttpRequest contentType(HttpContentType type) {
+		if (type == null) {
+			return contentType("");
+		}
 		return contentType(type.getValue());
 	}
 
@@ -239,6 +243,23 @@ public class HttpRequest {
 			contentTypeIfAbsent(HttpContentType.APPLICATION_XML);
 		}
 		return this;
+	}
+
+	/**
+	 * body中写入map - 如果当前 content Type 不是 form表单样式. contentType会被设置为 json
+	 * @param map map
+	 * @return live.lingting.tools.http.HttpRequest
+	 */
+	public HttpRequest body(Map<String, Object> map) {
+		if (CollectionUtils.isEmpty(map)) {
+			return this;
+		}
+		if (isForm()) {
+			return body(HttpUtils.urlParamBuild(map));
+		}
+		else {
+			return body(JacksonUtils.toJson(map));
+		}
 	}
 
 	public HttpRequest charset(String charsetName) throws UnsupportedCharsetException {
@@ -381,6 +402,9 @@ public class HttpRequest {
 
 		for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
 			for (String val : entry.getValue()) {
+				if (val == null || val.length() == 0) {
+					continue;
+				}
 
 				// 设备 charset
 				if (val.equalsIgnoreCase(HttpHeader.CONTENT_TYPE.getVal())) {
@@ -414,31 +438,7 @@ public class HttpRequest {
 
 			// content type 是 form 且 form 不为空 使用 form 表单
 			if (isForm() && !CollectionUtils.isEmpty(form)) {
-				StringBuilder builder = new StringBuilder();
-
-				final Iterator<Map.Entry<String, Object>> iterator = form.entrySet().iterator();
-
-				while (iterator.hasNext()) {
-					final Map.Entry<String, Object> entry = iterator.next();
-
-					builder.append(entry.getKey()).append("=");
-
-					if (entry.getValue() instanceof Iterable) {
-						builder.append(StringUtils.join((Iterable<?>) entry.getValue(), ","));
-					}
-					else if (entry.getValue() instanceof Iterator) {
-						builder.append(StringUtils.join((Iterator<?>) entry.getValue(), ","));
-					}
-					else {
-						builder.append(entry.getValue());
-					}
-
-					if (iterator.hasNext()) {
-						builder.append("&");
-					}
-				}
-
-				out.write(builder.toString().getBytes(charset));
+				out.write(HttpUtils.urlParamBuild(form).getBytes(charset));
 			}
 			// body 不为空 使用 body
 			else {
@@ -489,7 +489,7 @@ public class HttpRequest {
 
 	public boolean isForm() {
 		final List<String> list = header(HttpHeader.CONTENT_TYPE);
-		return CollectionUtils.isEmpty(list) || list.get(0).contains("form-");
+		return !CollectionUtils.isEmpty(list) && list.get(0).contains("form-");
 	}
 
 	public boolean isMultipart() {
