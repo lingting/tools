@@ -254,7 +254,7 @@ public class HttpRequest {
 		if (CollectionUtils.isEmpty(map)) {
 			return this;
 		}
-		if (isForm()) {
+		if (isForm() || method.equals(HttpMethod.GET)) {
 			return body(HttpUtils.urlParamBuild(map));
 		}
 		else {
