@@ -32,4 +32,6 @@ public class HttpConstants {
 
 	public static final String DEFLATE = "deflate";
 
+	public static final String UA = "lingting";
+
 }

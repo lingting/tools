@@ -5,6 +5,7 @@ import static live.lingting.tools.core.util.StringUtils.hasText;
 import static live.lingting.tools.http.constant.HttpConstants.CONTENT_TYPE_TEMPLATE;
 import static live.lingting.tools.http.constant.HttpConstants.QUERY_DELIMITER;
 import static live.lingting.tools.http.constant.HttpConstants.QUERY_PARAMS_DELIMITER;
+import static live.lingting.tools.http.constant.HttpConstants.UA;
 import static live.lingting.tools.http.constant.HttpConstants.URL_DELIMITER;
 
 import java.io.File;
@@ -413,6 +414,10 @@ public class HttpRequest {
 
 				connection.addRequestProperty(entry.getKey(), val);
 			}
+		}
+
+		if (CollectionUtils.isEmpty(header(HttpHeader.USER_AGENT))) {
+			connection.addRequestProperty(HttpHeader.USER_AGENT.getVal(), UA);
 		}
 
 		return connection;
