@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,12 +73,16 @@ public class HttpRequest {
 
 	private boolean useCache = false;
 
+	public static HttpRequest create(HttpMethod method) {
+		return new HttpRequest().method(Objects.requireNonNull(method));
+	}
+
 	public static HttpRequest post() {
-		return new HttpRequest().method(HttpMethod.POST);
+		return create(HttpMethod.POST);
 	}
 
 	public static HttpRequest get() {
-		return new HttpRequest().method(HttpMethod.GET);
+		return create(HttpMethod.GET);
 	}
 
 	public HttpRequest method(HttpMethod method) {
