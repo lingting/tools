@@ -15,7 +15,7 @@ public class StringUtils {
 	 */
 	public static boolean hasText(String str) {
 		if (str == null || str.length() < 1) {
-			return true;
+			return false;
 		}
 
 		for (int i = 0; i < str.length(); i++) {
