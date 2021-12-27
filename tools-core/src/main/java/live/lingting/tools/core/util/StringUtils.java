@@ -14,7 +14,17 @@ public class StringUtils {
 	 * @return boolean
 	 */
 	public static boolean hasText(String str) {
-		return str != null && str.length() > 0 && str.replace("\\s", "").length() > 0;
+		if (str == null || str.length() < 1) {
+			return true;
+		}
+
+		for (int i = 0; i < str.length(); i++) {
+			if (CharUtils.isVisible(str.charAt(i))) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -74,6 +84,30 @@ public class StringUtils {
 		}
 
 		return builder.toString();
+	}
+
+	public static String firstLower(String str) {
+		if (!hasText(str)) {
+			return str;
+		}
+
+		final char c = str.charAt(0);
+		if (CharUtils.isUpperLetter(c)) {
+			return Character.toLowerCase(c) + str.substring(1);
+		}
+		return str;
+	}
+
+	public static String firstUpper(String str) {
+		if (!hasText(str)) {
+			return str;
+		}
+
+		final char c = str.charAt(0);
+		if (CharUtils.isLowerLetter(c)) {
+			return Character.toUpperCase(c) + str.substring(1);
+		}
+		return str;
 	}
 
 }
