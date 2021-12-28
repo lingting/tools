@@ -9,6 +9,10 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
+    <name>tools</name>
+    <description>工具类</description>
+    <url>https://github.com/lingting/tools</url>
+
     <modules>
         <module>tools-http</module>
         <module>tools-json</module>
@@ -16,7 +20,7 @@
     </modules>
 
     <properties>
-        <revision>2022.1.1-SNAPSHOT</revision>
+        <revision>2022.1.1</revision>
 
         <jackson.version>2.12.5</jackson.version>
 
