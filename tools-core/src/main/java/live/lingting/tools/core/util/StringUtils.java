@@ -19,7 +19,8 @@ public class StringUtils {
 		}
 
 		for (int i = 0; i < str.length(); i++) {
-			if (CharUtils.isVisible(str.charAt(i))) {
+			// 如果是非空白字符
+			if (!Character.isWhitespace(str.charAt(i))) {
 				return true;
 			}
 		}

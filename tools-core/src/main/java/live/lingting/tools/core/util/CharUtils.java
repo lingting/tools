@@ -8,15 +8,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class CharUtils {
 
-	/**
-	 * 是否为可见字符
-	 * @param c c
-	 * @return boolean
-	 */
-	public static boolean isVisible(char c) {
-		return c >= 32 && c < 127;
-	}
-
 	public static boolean isLowerLetter(char c) {
 		return c >= 'a' && c <= 'z';
 	}
