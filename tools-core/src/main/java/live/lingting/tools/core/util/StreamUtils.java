@@ -27,7 +27,7 @@ public class StreamUtils {
 				break;
 			}
 
-			out.write(bytes);
+			out.write(bytes, 0, len);
 		}
 	}
 
