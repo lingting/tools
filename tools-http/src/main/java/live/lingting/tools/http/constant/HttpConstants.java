@@ -18,7 +18,7 @@ public class HttpConstants {
 
 	public static final String QUERY_PARAMS_DELIMITER = "&";
 
-	public static final String DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"%s\"\r\n";
+	public static final String DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"%s\"\r\n\r\n";
 
 	public static final String DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n";
 
@@ -33,5 +33,9 @@ public class HttpConstants {
 	public static final String DEFLATE = "deflate";
 
 	public static final String UA = "lingting";
+
+	public static final String HEADER_CONTENT_TYPE_CHARSET = "%s; charset=%s";
+
+	public static final String HEADER_CONTENT_TYPE_BOUNDARY = "%s; charset=%s; boundary=%s";
 
 }

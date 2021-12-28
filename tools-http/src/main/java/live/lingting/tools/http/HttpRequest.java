@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -414,7 +413,7 @@ public class HttpRequest {
 
 				// 设备 charset
 				if (val.equalsIgnoreCase(HttpHeader.CONTENT_TYPE.getVal())) {
-					val = val + ";charset=" + charset.name();
+					val = String.format(HttpConstants.HEADER_CONTENT_TYPE_CHARSET, val, charset.name());
 				}
 
 				connection.addRequestProperty(entry.getKey(), val);
@@ -434,18 +433,24 @@ public class HttpRequest {
 			return;
 		}
 		connection.setDoOutput(true);
-		final OutputStream out = connection.getOutputStream();
 
 		if (isMultipart()) {
-			multipartSend(out);
+			String boundary = "LingTingFormBoundary" + RandomUtils.nextStr(9);
+			connection.setRequestProperty(HttpHeader.CONTENT_TYPE.getVal(),
+					String.format(HttpConstants.HEADER_CONTENT_TYPE_BOUNDARY,
+							HttpContentType.MULTIPART_FORM_DATA.getValue(), charset.name(), boundary));
+
+			multipartSend(connection.getOutputStream(), boundary);
 		}
 		else {
 			// 未配置. 使用默认表单
 			if (CollectionUtils.isEmpty(header(HttpHeader.CONTENT_TYPE))) {
-				connection.addRequestProperty(HttpHeader.CONTENT_TYPE.getVal(),
-						HttpContentType.APPLICATION_FORM_URLENCODED.getValue());
+				connection.setRequestProperty(HttpHeader.CONTENT_TYPE.getVal(),
+						String.format(HttpConstants.HEADER_CONTENT_TYPE_CHARSET,
+								HttpContentType.APPLICATION_FORM_URLENCODED.getValue(), charset.name()));
 			}
 
+			final OutputStream out = connection.getOutputStream();
 			// content type 是 form 且 form 不为空 使用 form 表单
 			if (isForm() && !CollectionUtils.isEmpty(form)) {
 				out.write(HttpUtils.urlParamBuild(form).getBytes(charset));
@@ -457,13 +462,15 @@ public class HttpRequest {
 		}
 	}
 
-	protected void multipartSend(OutputStream out) throws IOException {
-		String boundary = "----------lingting_http_" + RandomUtils.nextStr(5);
+	protected void multipartSend(OutputStream out, String boundary) throws IOException {
 		for (Map.Entry<String, Object> entry : form.entrySet()) {
 			final List<Object> list = entry.getValue() instanceof MultiVal ? ((MultiVal) entry.getValue()).values()
 					: CollectionUtils.toList(entry.getValue());
 
 			for (Object obj : list) {
+				if (obj == null) {
+					continue;
+				}
 
 				write(out, "--");
 				write(out, boundary);
@@ -492,9 +499,7 @@ public class HttpRequest {
 	}
 
 	public void write(OutputStream out, String str) throws IOException {
-		try (final OutputStreamWriter writer = new OutputStreamWriter(out, charset)) {
-			writer.write(str);
-		}
+		out.write(str.getBytes(charset));
 	}
 
 	public boolean isForm() {

@@ -115,6 +115,7 @@ public class HttpResponse<T> {
 	 */
 	public byte[] bytes() {
 		if (bytes == null && in != null) {
+
 			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 				StreamUtils.write(in, out);
 				bytes = out.toByteArray();
