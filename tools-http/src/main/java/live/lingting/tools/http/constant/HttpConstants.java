@@ -16,6 +16,8 @@ public class HttpConstants {
 
 	public static final String QUERY_DELIMITER = "?";
 
+	public static final String QUERY_DELIMITER_SPLIT = "\\?";
+
 	public static final String QUERY_PARAMS_DELIMITER = "&";
 
 	public static final String DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"%s\"\r\n\r\n";

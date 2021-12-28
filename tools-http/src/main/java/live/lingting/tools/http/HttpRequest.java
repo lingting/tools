@@ -355,6 +355,9 @@ public class HttpRequest {
 	 * @return java.lang.String
 	 */
 	protected String queryBuild() {
+		if (body == null) {
+			return null;
+		}
 		return new String(body, charset);
 	}
 
@@ -368,7 +371,7 @@ public class HttpRequest {
 			String query = "";
 
 			if (uri.contains(QUERY_DELIMITER)) {
-				final String[] split = uri.split(QUERY_DELIMITER);
+				final String[] split = uri.split(HttpConstants.QUERY_DELIMITER_SPLIT);
 				uri = split[0];
 				query = split[1];
 				if (query.endsWith(QUERY_PARAMS_DELIMITER)) {
@@ -377,7 +380,14 @@ public class HttpRequest {
 			}
 
 			// 组装
-			query = query + QUERY_PARAMS_DELIMITER + queryBuild();
+			final String qb = queryBuild();
+			if (StringUtils.hasText(qb)) {
+				if (StringUtils.hasText(query) && !query.endsWith(QUERY_DELIMITER)) {
+					query = query + QUERY_DELIMITER;
+				}
+				query = query + qb;
+			}
+
 			this.uri = uri + QUERY_DELIMITER + query;
 		}
 
