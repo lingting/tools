@@ -72,6 +72,8 @@ public class HttpRequest {
 
 	private boolean useCache = false;
 
+	private boolean keepAlive = false;
+
 	public static HttpRequest create(HttpMethod method) {
 		return new HttpRequest().method(Objects.requireNonNull(method));
 	}
@@ -316,6 +318,14 @@ public class HttpRequest {
 		return this;
 	}
 
+	/**
+	 * 是否保持连接
+	 */
+	public HttpRequest keepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
+		return this;
+	}
+
 	public HttpResponse<String> exec() throws HttpException {
 		return exec(String.class);
 	}
@@ -408,6 +418,7 @@ public class HttpRequest {
 		if (connectTimeout > 0) {
 			connection.setConnectTimeout(connectTimeout);
 		}
+
 		if (readTimeout > 0) {
 			connection.setReadTimeout(readTimeout);
 		}
@@ -432,6 +443,11 @@ public class HttpRequest {
 
 		if (CollectionUtils.isEmpty(header(HttpHeader.USER_AGENT))) {
 			connection.addRequestProperty(HttpHeader.USER_AGENT.getVal(), UA);
+		}
+
+		// 不保持连接
+		if (!keepAlive) {
+			connection.addRequestProperty(HttpHeader.CONNECTION.getVal(), HttpConstants.CONNECTION_CLOSE);
 		}
 
 		return connection;

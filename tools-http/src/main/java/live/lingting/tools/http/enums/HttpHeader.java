@@ -30,6 +30,10 @@ public enum HttpHeader {
 	 * Content-Encoding
 	 */
 	CONTENT_ENCODING("Content-Encoding"),
+	/**
+	 * Connection
+	 */
+	CONNECTION("Connection"),
 
 	;
 

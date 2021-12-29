@@ -40,4 +40,6 @@ public class HttpConstants {
 
 	public static final String HEADER_CONTENT_TYPE_BOUNDARY = "%s; charset=%s; boundary=%s";
 
+	public static final String CONNECTION_CLOSE = "close";
+
 }
