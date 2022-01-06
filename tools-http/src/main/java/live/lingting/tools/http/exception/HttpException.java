@@ -3,7 +3,7 @@ package live.lingting.tools.http.exception;
 /**
  * @author lingting
  */
-public class HttpException extends Exception {
+public class HttpException extends RuntimeException {
 
 	public HttpException(String message) {
 		super(message);

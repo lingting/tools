@@ -7,6 +7,8 @@ import static live.lingting.tools.http.constant.HttpConstants.QUERY_DELIMITER;
 import static live.lingting.tools.http.constant.HttpConstants.QUERY_PARAMS_DELIMITER;
 import static live.lingting.tools.http.constant.HttpConstants.UA;
 import static live.lingting.tools.http.constant.HttpConstants.URL_DELIMITER;
+import static live.lingting.tools.http.https.DefaultHttps.HOSTNAME_VERIFIER;
+import static live.lingting.tools.http.https.DefaultHttps.SSF;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,17 +67,45 @@ public class HttpRequest {
 
 	private Charset charset = StandardCharsets.UTF_8;
 
+	/**
+	 * 代理
+	 */
 	private Proxy proxy;
 
+	/**
+	 * 连接超时
+	 */
 	private int connectTimeout = -1;
 
+	/**
+	 * 读取超时
+	 */
 	private int readTimeout = -1;
 
+	/**
+	 * 流式传输. 块大小
+	 */
 	private int blockSize = 0;
 
+	/**
+	 * 是否使用缓存
+	 */
 	private boolean useCache = false;
 
+	/**
+	 * 保持存活
+	 */
 	private boolean keepAlive = false;
+
+	/**
+	 * HostnameVerifier，用于HTTPS安全连接
+	 */
+	private HostnameVerifier hostnameVerifier;
+
+	/**
+	 * SSLSocketFactory，用于HTTPS安全连接
+	 */
+	private SSLSocketFactory ssf;
 
 	public static HttpRequest create(HttpMethod method) {
 		return new HttpRequest().method(Objects.requireNonNull(method));
@@ -326,6 +359,15 @@ public class HttpRequest {
 		return this;
 	}
 
+	/**
+	 * https连接配置
+	 */
+	public HttpRequest https(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) {
+		this.hostnameVerifier = hostnameVerifier;
+		this.ssf = ssf;
+		return this;
+	}
+
 	public HttpResponse<String> exec() throws HttpException {
 		return exec(String.class);
 	}
@@ -450,6 +492,12 @@ public class HttpRequest {
 			connection.addRequestProperty(HttpHeader.CONNECTION.getVal(), HttpConstants.CONNECTION_CLOSE);
 		}
 
+		if (connection instanceof HttpsURLConnection) {
+			final HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
+			httpsConnection.setHostnameVerifier(hostnameVerifier == null ? HOSTNAME_VERIFIER : hostnameVerifier);
+			httpsConnection.setSSLSocketFactory(ssf == null ? SSF : ssf);
+		}
+
 		return connection;
 	}
 
@@ -482,8 +530,8 @@ public class HttpRequest {
 				out.write(HttpUtils.urlParamBuild(form).getBytes(charset));
 			}
 			// body 不为空 使用 body
-			else {
-				out.write(body == null ? new byte[0] : body);
+			else if (body != null) {
+				out.write(body);
 			}
 		}
 	}

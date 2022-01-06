@@ -42,4 +42,18 @@ public class HttpConstants {
 
 	public static final String CONNECTION_CLOSE = "close";
 
+	public static final String SSL = "SSL";
+
+	public static final String SSL_V2 = "SSLv2";
+
+	public static final String SSL_V3 = "SSLv3";
+
+	public static final String TLS = "TLS";
+
+	public static final String TLS_V1 = "TLSv1";
+
+	public static final String TLS_V11 = "TLSv1.1";
+
+	public static final String TLS_V12 = "TLSv1.2";
+
 }
