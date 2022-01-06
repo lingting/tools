@@ -20,7 +20,7 @@
     </modules>
 
     <properties>
-        <revision>2021.12.5.3</revision>
+        <revision>2022.1.2</revision>
 
         <jackson.version>2.12.5</jackson.version>
 
