@@ -13,6 +13,7 @@ import static live.lingting.tools.http.https.DefaultHttps.SSF;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -558,8 +559,13 @@ public class HttpRequest {
 					write(out, String.format(CONTENT_TYPE_TEMPLATE,
 							hasText(mimeType) ? mimeType : HttpConstants.MULTIPART_DEFAULT_CONTENT_TYPE));
 
-					final FileInputStream inputStream = FileUtils.getInputStream(file);
-					StreamUtils.write(inputStream, out);
+					try (FileInputStream inputStream = new FileInputStream(file)) {
+						StreamUtils.write(inputStream, out);
+					}
+				}
+				else if (obj instanceof InputStream) {
+					write(out, String.format(HttpConstants.DISPOSITION_TEMPLATE, entry.getKey()));
+					StreamUtils.write((InputStream) obj, out);
 				}
 				else {
 					write(out, String.format(HttpConstants.DISPOSITION_TEMPLATE, entry.getKey()));
