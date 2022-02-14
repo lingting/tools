@@ -20,7 +20,7 @@
     </modules>
 
     <properties>
-        <revision>2022.2.1</revision>
+        <revision>2022.2.3</revision>
 
         <jackson.version>2.12.5</jackson.version>
 
@@ -29,6 +29,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
 
         <!-- 插件版本 -->
         <maven-compiler-plugin.verison>3.8.0</maven-compiler-plugin.verison>
