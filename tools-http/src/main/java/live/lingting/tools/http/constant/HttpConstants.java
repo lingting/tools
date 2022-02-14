@@ -14,6 +14,8 @@ public class HttpConstants {
 
 	public static final String URL_DELIMITER = "://";
 
+	public static final String HOST_DELIMITER = "/";
+
 	public static final String QUERY_DELIMITER = "?";
 
 	public static final String QUERY_DELIMITER_SPLIT = "\\?";

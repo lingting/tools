@@ -77,7 +77,10 @@ public class StringUtils {
 		StringBuilder builder = new StringBuilder();
 		while (iterator.hasNext()) {
 			final Object next = iterator.next();
-			builder.append(next.toString());
+			if (next == null) {
+				continue;
+			}
+			builder.append(next);
 
 			if (iterator.hasNext()) {
 				builder.append(delimiter);
@@ -85,6 +88,7 @@ public class StringUtils {
 		}
 
 		return builder.toString();
+
 	}
 
 	public static String firstLower(String str) {

@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -291,7 +292,7 @@ public class HttpRequest {
 	 * @param map map
 	 * @return live.lingting.tools.http.HttpRequest
 	 */
-	public HttpRequest body(Map<String, Object> map) {
+	public HttpRequest body(Map<String, Object> map) throws UnsupportedEncodingException {
 		if (CollectionUtils.isEmpty(map)) {
 			return this;
 		}
@@ -444,9 +445,7 @@ public class HttpRequest {
 			this.uri = uri + QUERY_DELIMITER + query;
 		}
 
-		final String url = protocol + URL_DELIMITER + uri;
-		// 不可见字符转为 %20
-		return new URL(null, url.replace("\\s", "%20"));
+		return new URL(null, protocol + URL_DELIMITER + uri);
 	}
 
 	protected HttpURLConnection connectionBuild(URL url) throws IOException {
