@@ -400,15 +400,11 @@ public class HttpRequest {
 		}
 	}
 
-	public String getUrl() {
-		return protocol + URL_DELIMITER + uri;
-	}
-
 	/**
 	 * body 转 查询参数
 	 * @return java.lang.String
 	 */
-	protected String queryBuild() {
+	public String queryBuild() {
 		if (body == null) {
 			return null;
 		}
@@ -418,10 +414,10 @@ public class HttpRequest {
 	/**
 	 * 构建实际请求的url
 	 */
-	protected URL urlBuild() throws MalformedURLException {
+	public URL urlBuild() throws MalformedURLException {
+		String uri = this.uri;
 		// get 请求将 参数放入 url中
 		if (method.equals(HttpMethod.GET)) {
-			String uri = this.uri;
 			String query = "";
 
 			if (uri.contains(QUERY_DELIMITER)) {
@@ -442,13 +438,13 @@ public class HttpRequest {
 				query = query + qb;
 			}
 
-			this.uri = uri + QUERY_DELIMITER + query;
+			uri = uri + QUERY_DELIMITER + query;
 		}
 
 		return new URL(null, protocol + URL_DELIMITER + uri);
 	}
 
-	protected HttpURLConnection connectionBuild(URL url) throws IOException {
+	public HttpURLConnection connectionBuild(URL url) throws IOException {
 		final HttpURLConnection connection = (HttpURLConnection) (proxy == null ? url.openConnection()
 				: url.openConnection(proxy));
 		connection.setDoInput(true);
@@ -501,7 +497,7 @@ public class HttpRequest {
 		return connection;
 	}
 
-	protected void send(HttpURLConnection connection) throws IOException {
+	public void send(HttpURLConnection connection) throws IOException {
 		if (method.equals(HttpMethod.GET)) {
 			connection.connect();
 			return;
@@ -536,7 +532,7 @@ public class HttpRequest {
 		}
 	}
 
-	protected void multipartSend(OutputStream out, String boundary) throws IOException {
+	public void multipartSend(OutputStream out, String boundary) throws IOException {
 		for (Map.Entry<String, Object> entry : form.entrySet()) {
 			final List<Object> list = entry.getValue() instanceof MultiVal ? ((MultiVal) entry.getValue()).values()
 					: CollectionUtils.toList(entry.getValue());
