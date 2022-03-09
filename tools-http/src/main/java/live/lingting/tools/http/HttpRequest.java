@@ -34,9 +34,10 @@ import javax.net.ssl.SSLSocketFactory;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import live.lingting.tools.core.http.HttpUtils;
+import live.lingting.tools.core.http.encoding.HttpGetCoding;
 import live.lingting.tools.core.util.CollectionUtils;
 import live.lingting.tools.core.util.FileUtils;
-import live.lingting.tools.core.util.HttpUtils;
 import live.lingting.tools.core.util.RandomUtils;
 import live.lingting.tools.core.util.StreamUtils;
 import live.lingting.tools.core.util.StringUtils;
@@ -438,7 +439,7 @@ public class HttpRequest {
 				query = query + qb;
 			}
 
-			uri = uri + QUERY_DELIMITER + query;
+			uri = HttpGetCoding.encodingUrl(uri) + QUERY_DELIMITER + query;
 		}
 
 		return new URL(null, protocol + URL_DELIMITER + uri);

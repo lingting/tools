@@ -1,11 +1,9 @@
-package live.lingting.tools.core.util;
+package live.lingting.tools.core.http;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
+import live.lingting.tools.core.http.encoding.HttpGetCoding;
 
 /**
  * @author lingting
@@ -13,7 +11,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class HttpUtils {
 
-	public static String urlParamBuild(Map<String, Object> map) throws UnsupportedEncodingException {
+	public static String urlParamBuild(Map<String, Object> map) {
 		StringBuilder builder = new StringBuilder();
 
 		final Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator();
@@ -40,7 +38,7 @@ public class HttpUtils {
 		return builder.toString();
 	}
 
-	public static String iteratorParamsBuild(Iterator<?> iterator) throws UnsupportedEncodingException {
+	public static String iteratorParamsBuild(Iterator<?> iterator) {
 		StringBuilder builder = new StringBuilder();
 
 		while (iterator.hasNext()) {
@@ -59,8 +57,8 @@ public class HttpUtils {
 		return builder.toString();
 	}
 
-	public static String urlParamEncoder(String parma) throws UnsupportedEncodingException {
-		return URLEncoder.encode(parma, StandardCharsets.UTF_8.name());
+	public static String urlParamEncoder(String parma) {
+		return HttpGetCoding.encodingParam(parma);
 	}
 
 }
