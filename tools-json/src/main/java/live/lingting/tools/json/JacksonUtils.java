@@ -1,6 +1,5 @@
 package live.lingting.tools.json;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -23,6 +22,16 @@ public class JacksonUtils {
 	static ObjectMapper mapper = new ObjectMapper();
 
 	static final String JSON_READ_FEATURE_CLASS = "com.fasterxml.jackson.core.json.JsonReadFeature";
+
+	private static final String JACKSON_CLASS = "com.fasterxml.jackson.databind.ObjectMapper";
+
+	private static final String GSON_CLASS = "com.google.gson.Gson";
+
+	private static final String HUTOOL_JSON_CLASS = "cn.hutool.json.JSONConfig";
+
+	private static final String HUTOOL_JSON_TYPE_REFERENCE_CLASS = "cn.hutool.core.lang.TypeReference";
+
+	private static final String FAST_JSON_CLASS = "com.alibaba.fastjson.JSON";
 
 	static {
 		// 序列化时忽略未知属性
@@ -60,12 +69,42 @@ public class JacksonUtils {
 
 	@SneakyThrows
 	public static <T> T toObj(String json, Type t) {
+		// 防止误传入其他类型的 typeReference 走这个方法然后转换出错
+		if (classIsPresent(HUTOOL_JSON_TYPE_REFERENCE_CLASS) && t instanceof cn.hutool.core.lang.TypeReference) {
+			return toObj(json, new TypeReference<T>() {
+				@Override
+				public Type getType() {
+					return ((cn.hutool.core.lang.TypeReference<?>) t).getType();
+				}
+			});
+		}
+		else if (classIsPresent(FAST_JSON_CLASS) && t instanceof com.alibaba.fastjson.TypeReference) {
+			return toObj(json, new TypeReference<T>() {
+				@Override
+				public Type getType() {
+					return ((com.alibaba.fastjson.TypeReference<?>) t).getType();
+				}
+			});
+		}
+		else if (classIsPresent(JACKSON_CLASS) && t instanceof com.fasterxml.jackson.core.type.TypeReference) {
+			return toObj(json, new TypeReference<T>() {
+				@Override
+				public Type getType() {
+					return ((com.fasterxml.jackson.core.type.TypeReference<?>) t).getType();
+				}
+			});
+		}
+
 		return mapper.readValue(json, mapper.constructType(t));
 	}
 
 	@SneakyThrows
 	public static <T> T toObj(String json, TypeReference<T> t) {
 		return mapper.readValue(json, t);
+	}
+
+	private static boolean classIsPresent(String className) {
+		return ClassUtils.isPresent(className, JacksonUtils.class.getClassLoader());
 	}
 
 }
