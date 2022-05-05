@@ -236,7 +236,7 @@ public class HttpRequest {
 	 */
 	public HttpRequest contentTypeIfAbsent(HttpContentType type) {
 		List<String> contentType = headers.get(HttpHeader.CONTENT_TYPE.getVal());
-		if (CollectionUtils.isEmpty(contentType) && !hasText(contentType.get(0))) {
+		if (CollectionUtils.isEmpty(contentType) || !hasText(contentType.get(0))) {
 			return contentType(type);
 		}
 		return this;
