@@ -1,4 +1,4 @@
-package live.lingting.tools.json.javkson;
+package live.lingting.tools.json.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -8,11 +8,18 @@ import java.io.IOException;
 /**
  * @author lingting
  */
-public class NullStringJsonSerializer extends JsonSerializer<Object> {
+public class NullArrayJsonSerializer extends JsonSerializer<Object> {
 
 	@Override
 	public void serialize(Object value, JsonGenerator jsonGenerator, SerializerProvider provider) throws IOException {
-		jsonGenerator.writeString("");
+		if (value == null) {
+			jsonGenerator.writeStartArray();
+			jsonGenerator.writeEndArray();
+		}
+		else {
+			jsonGenerator.writeObject(value);
+		}
+
 	}
 
 }

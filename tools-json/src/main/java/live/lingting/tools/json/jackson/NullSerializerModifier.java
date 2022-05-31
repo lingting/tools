@@ -1,4 +1,4 @@
-package live.lingting.tools.json.javkson;
+package live.lingting.tools.json.jackson;
 
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.JsonSerializer;

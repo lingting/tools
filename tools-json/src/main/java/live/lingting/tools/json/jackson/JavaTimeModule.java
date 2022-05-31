@@ -1,4 +1,4 @@
-package live.lingting.tools.json.javkson;
+package live.lingting.tools.json.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.PackageVersion;
