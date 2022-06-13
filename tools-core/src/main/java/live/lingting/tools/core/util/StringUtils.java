@@ -1,5 +1,6 @@
 package live.lingting.tools.core.util;
 
+import java.io.CharArrayWriter;
 import java.util.Iterator;
 import live.lingting.tools.core.constant.StringConstants;
 
@@ -113,6 +114,34 @@ public class StringUtils {
 			return Character.toUpperCase(c) + str.substring(1);
 		}
 		return str;
+	}
+
+	/**
+	 * 驼峰字符串转下划线字符串
+	 * <p>
+	 * eg: HumpToUnderscore -> hump_to_underscore
+	 * </p>
+	 */
+	public static String humpToUnderscore(String str) {
+		CharArrayWriter writer = new CharArrayWriter();
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			// 大写字母处理
+			if (CharUtils.isUpperLetter(c)) {
+				// 如果不是第一个大写字母, 插入下划线 _
+				if (writer.size() > 0) {
+					writer.append('_');
+				}
+				// 转小写
+				writer.append(Character.toLowerCase(c));
+			}
+			// 不是则直接写入
+			else {
+				writer.append(c);
+			}
+		}
+
+		return writer.toString();
 	}
 
 }
