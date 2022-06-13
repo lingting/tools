@@ -39,23 +39,30 @@ public class DefaultHttps {
 
 	public static final KeyManager[] KEY_MANAGERS = null;
 
-	public static final TrustManager[] TRUST_MANAGERS = { new X509TrustManager() {
+	public static final X509TrustManager TRUST_MANAGER;
 
-		@Override
-		public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+	public static final TrustManager[] TRUST_MANAGERS;
 
-		}
+	static {
+		TRUST_MANAGER = new X509TrustManager() {
 
-		@Override
-		public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+			@Override
+			public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
 
-		}
+			}
 
-		@Override
-		public X509Certificate[] getAcceptedIssuers() {
-			return new X509Certificate[0];
-		}
-	} };
+			@Override
+			public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+			}
+
+			@Override
+			public X509Certificate[] getAcceptedIssuers() {
+				return new X509Certificate[0];
+			}
+		};
+		TRUST_MANAGERS = new TrustManager[] { TRUST_MANAGER };
+	}
 
 	/**
 	 * 默认的SSLSocketFactory，区分安卓
