@@ -14,10 +14,6 @@ import java.util.Set;
  */
 public class CollectionUtils {
 
-	public static boolean isEmpty(Collection<?> collection) {
-		return collection == null || collection.isEmpty();
-	}
-
 	@SafeVarargs
 	public static <T> List<T> toList(T... ts) {
 		final ArrayList<T> list = new ArrayList<>();
@@ -32,8 +28,12 @@ public class CollectionUtils {
 		return set;
 	}
 
+	public static boolean isEmpty(Collection<?> collection) {
+		return collection == null || collection.isEmpty();
+	}
+
 	public static boolean isEmpty(Map<?, ?> map) {
-		return map != null && map.isEmpty();
+		return map == null || map.isEmpty();
 	}
 
 	/**

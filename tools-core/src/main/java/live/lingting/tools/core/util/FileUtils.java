@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
 import live.lingting.tools.core.constant.FileConstants;
@@ -64,6 +66,40 @@ public class FileUtils {
 
 	public static FileInputStream getInputStream(File file) throws FileNotFoundException {
 		return new FileInputStream(file);
+	}
+
+	/**
+	 * 扫描指定路径下所有文件
+	 * @param path 指定路径
+	 * @param recursive 是否递归
+	 * @return java.util.List<java.lang.String>
+	 */
+	public static List<String> scanFile(String path, boolean recursive) {
+		List<String> list = new ArrayList<>();
+		File file = new File(path);
+		if (!file.exists()) {
+			return list;
+		}
+
+		if (file.isFile()) {
+			list.add(file.getAbsolutePath());
+		}
+		// 文件夹
+		else {
+			File[] files = file.listFiles();
+			for (File childFile : files) {
+				// 如果递归
+				if (recursive && childFile.isDirectory()) {
+					list.addAll(scanFile(childFile.getAbsolutePath(), true));
+				}
+				// 是文件
+				else if (childFile.isFile()) {
+					list.add(childFile.getAbsolutePath());
+				}
+			}
+		}
+
+		return list;
 	}
 
 }
