@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.lang.reflect.Type;
 import java.util.function.Consumer;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import live.lingting.tools.core.util.ClassUtils;
@@ -19,6 +20,7 @@ import live.lingting.tools.json.jackson.NullSerializerModifier;
 @UtilityClass
 public class JacksonUtils {
 
+	@Getter
 	static ObjectMapper mapper = new ObjectMapper();
 
 	static final String JSON_READ_FEATURE_CLASS = "com.fasterxml.jackson.core.json.JsonReadFeature";
