@@ -213,7 +213,10 @@ public class HttpRequest {
 		FormBody.Builder builder = new FormBody.Builder();
 
 		map.forEach((key, val) -> {
-			if (val instanceof Collection) {
+			if (val == null) {
+				//
+			}
+			else if (val instanceof Collection) {
 				((Collection<?>) val).forEach(v -> builder.add(key, v.toString()));
 			}
 			else if (val instanceof Iterable) {
@@ -243,7 +246,10 @@ public class HttpRequest {
 		MultipartBody.Builder builder = new MultipartBody.Builder();
 
 		map.forEach((key, val) -> {
-			if (val instanceof Collection) {
+			if (val == null) {
+				//
+			}
+			else if (val instanceof Collection) {
 				((Collection<?>) val).forEach(v -> addFormDataPart(builder, contentType, key, v));
 			}
 			else if (val instanceof Iterable) {
@@ -289,7 +295,11 @@ public class HttpRequest {
 			for (Map.Entry<String, ?> entry : map.entrySet()) {
 				String key = entry.getKey();
 				Object val = entry.getValue();
-				if (val instanceof Collection) {
+
+				if (val == null) {
+					builder.addQueryParameter(key, null);
+				}
+				else if (val instanceof Collection) {
 					((Collection<?>) val).forEach(v -> builder.addQueryParameter(key, v.toString()));
 				}
 				else if (val instanceof Iterable) {
@@ -397,8 +407,13 @@ public class HttpRequest {
 		Request.Builder builder = new Request.Builder().method(method.toString(), body).url(url);
 
 		headers.forEach((k, v) -> {
+			if (CollectionUtils.isEmpty(v)) {
+				return;
+			}
 			for (String s : v) {
-				builder.addHeader(k, s);
+				if (s != null) {
+					builder.addHeader(k, s);
+				}
 			}
 		});
 
