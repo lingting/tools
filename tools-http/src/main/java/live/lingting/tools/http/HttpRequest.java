@@ -1,90 +1,104 @@
 package live.lingting.tools.http;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import live.lingting.tools.core.util.CollectionUtils;
+import live.lingting.tools.http.enums.HttpContentType;
 import live.lingting.tools.http.enums.HttpHeader;
 import live.lingting.tools.http.enums.HttpMethod;
 import live.lingting.tools.http.exception.HttpException;
+import okio.ByteString;
 
 /**
  * @author lingting
  */
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HttpRequest {
 
 	@Getter
 	private HttpMethod method;
 
-	private String url = "";
+	@Getter
+	private HttpUrl url;
 
 	private final Map<String, List<String>> headers = new HashMap<>();
 
+	@Getter
 	private RequestBody body;
 
 	/**
 	 * 代理
 	 */
+	@Getter
 	private Proxy proxy;
 
 	/**
 	 * 连接超时, 单位: 毫秒
 	 */
+	@Getter
 	private long connectTimeout = 0;
 
 	/**
 	 * 读取超时, 单位: 毫秒
 	 */
+	@Getter
 	private long readTimeout = 0;
 
 	/**
 	 * HostnameVerifier，用于HTTPS安全连接
 	 */
+	@Getter
 	private HostnameVerifier hostnameVerifier;
 
 	/**
 	 * SSLSocketFactory，用于HTTPS安全连接
 	 */
+	@Getter
 	private SSLSocketFactory ssf;
 
+	@Getter
 	private X509TrustManager trustManager;
 
-	public static HttpRequest create(HttpMethod method) {
-		return new HttpRequest().method(Objects.requireNonNull(method));
+	protected HttpRequest(HttpMethod method, HttpUrl url) {
+		this.url = url;
+		this.method = method;
 	}
 
-	public static HttpRequest post() {
-		return create(HttpMethod.POST);
+	public static HttpRequest create(HttpMethod method, String url) {
+		return new HttpRequest(method, HttpUrl.parse(url));
 	}
 
-	public static HttpRequest get() {
-		return create(HttpMethod.GET);
+	public static HttpRequest post(String url) {
+		return create(HttpMethod.POST, url);
+	}
+
+	public static HttpRequest get(String url) {
+		return create(HttpMethod.GET, url);
 	}
 
 	public HttpRequest method(HttpMethod method) {
 		this.method = method;
-		return this;
-	}
-
-	public HttpRequest url(String url) {
-		this.url = url;
 		return this;
 	}
 
@@ -161,6 +175,142 @@ public class HttpRequest {
 
 	public HttpRequest body(RequestBody body) {
 		this.body = body;
+		return this;
+	}
+
+	/**
+	 * 设置body
+	 * @param val 如果不是{@link java.io.File} 或 {@link byte[]} 或 {@link ByteString} 则会调用
+	 * .toString() 方法赋值
+	 */
+	public HttpRequest body(HttpContentType contentType, Object val) {
+		return body(contentType.getValue(), val);
+	}
+
+	public HttpRequest body(String contentType, Object val) {
+		RequestBody requestBody;
+		// 其他类型请求
+		MediaType mediaType = MediaType.parse(contentType);
+		if (val instanceof File) {
+			requestBody = RequestBody.create(mediaType, (File) val);
+		}
+		else if (val instanceof byte[]) {
+			requestBody = RequestBody.create(mediaType, (byte[]) val);
+		}
+		else if (val instanceof ByteString) {
+			requestBody = RequestBody.create(mediaType, (ByteString) val);
+		}
+		else {
+			requestBody = RequestBody.create(mediaType, val.toString());
+		}
+		return body(requestBody);
+	}
+
+	/**
+	 * form表单
+	 */
+	public HttpRequest form(Map<String, ?> map) {
+		FormBody.Builder builder = new FormBody.Builder();
+
+		map.forEach((key, val) -> {
+			if (val instanceof Collection) {
+				((Collection<?>) val).forEach(v -> builder.add(key, v.toString()));
+			}
+			else if (val instanceof Iterable) {
+				((Iterable<?>) val).forEach(v -> builder.add(key, v.toString()));
+			}
+			else if (val instanceof Iterator) {
+				((Iterator<?>) val).forEachRemaining(v -> builder.add(key, v.toString()));
+			}
+			else if (val.getClass().isArray()) {
+				for (Object v : (Object[]) val) {
+					builder.add(key, v.toString());
+				}
+			}
+			else {
+				builder.add(key, val.toString());
+			}
+		});
+
+		return form(builder.build());
+	}
+
+	public HttpRequest form(FormBody formBody) {
+		return body(formBody);
+	}
+
+	public HttpRequest formMultipart(String contentType, Map<String, ?> map) {
+		MultipartBody.Builder builder = new MultipartBody.Builder();
+
+		map.forEach((key, val) -> {
+			if (val instanceof Collection) {
+				((Collection<?>) val).forEach(v -> addFormDataPart(builder, contentType, key, v));
+			}
+			else if (val instanceof Iterable) {
+				((Iterable<?>) val).forEach(v -> addFormDataPart(builder, contentType, key, v));
+			}
+			else if (val instanceof Iterator) {
+				((Iterator<?>) val).forEachRemaining(v -> addFormDataPart(builder, contentType, key, v));
+			}
+			else if (val.getClass().isArray()) {
+				for (Object v : (Object[]) val) {
+					addFormDataPart(builder, contentType, key, v);
+				}
+			}
+			else {
+				addFormDataPart(builder, contentType, key, val);
+			}
+		});
+
+		return formMultipart(builder.build());
+	}
+
+	private void addFormDataPart(MultipartBody.Builder builder, String contentType, String key, Object o) {
+		if (o instanceof File) {
+			builder.addFormDataPart(key, ((File) o).getName(),
+					RequestBody.create(MediaType.parse(contentType), (File) o));
+		}
+		else {
+			builder.addFormDataPart(key, o.toString());
+		}
+	}
+
+	public HttpRequest formMultipart(MultipartBody multipartBody) {
+		return body(multipartBody);
+	}
+
+	/**
+	 * 设置url参数
+	 */
+	public HttpRequest urlParams(Map<String, ?> map) {
+		if (!CollectionUtils.isEmpty(map)) {
+			HttpUrl.Builder builder = url.newBuilder();
+
+			for (Map.Entry<String, ?> entry : map.entrySet()) {
+				String key = entry.getKey();
+				Object val = entry.getValue();
+				if (val instanceof Collection) {
+					((Collection<?>) val).forEach(v -> builder.addQueryParameter(key, v.toString()));
+				}
+				else if (val instanceof Iterable) {
+					((Iterable<?>) val).forEach(v -> builder.addQueryParameter(key, v.toString()));
+				}
+				else if (val instanceof Iterator) {
+					((Iterator<?>) val).forEachRemaining(v -> builder.addQueryParameter(key, v.toString()));
+				}
+				else if (val.getClass().isArray()) {
+					for (Object v : (Object[]) val) {
+						builder.addQueryParameter(key, v.toString());
+					}
+				}
+				else {
+					builder.addQueryParameter(key, val.toString());
+				}
+			}
+
+			url = builder.build();
+
+		}
 		return this;
 	}
 
