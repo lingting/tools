@@ -13,7 +13,7 @@ class CommandTest {
 	@SneakyThrows
 	void single() {
 		CommandResult result = Command.instance("cmd").exec("dir").exit().result();
-		String output = result.getStrOutput();
+		String output = result.getOutputStr();
 		Assertions.assertNotNull(output);
 		System.out.println(output);
 	}

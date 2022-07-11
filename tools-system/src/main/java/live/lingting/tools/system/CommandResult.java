@@ -17,8 +17,10 @@ import live.lingting.tools.core.util.StringUtils;
  */
 public class CommandResult {
 
+	@Getter
 	protected File outputFile;
 
+	@Getter
 	protected File errorFile;
 
 	private Charset charset;
@@ -44,7 +46,7 @@ public class CommandResult {
 		return result;
 	}
 
-	public String getStrOutput() throws IOException {
+	public String getOutputStr() throws IOException {
 		if (!StringUtils.hasText(strOutput)) {
 			try (FileInputStream output = new FileInputStream(outputFile)) {
 				strOutput = StreamUtils.toString(output, StreamUtils.DEFAULT_SIZE, charset);
@@ -53,7 +55,7 @@ public class CommandResult {
 		return strOutput;
 	}
 
-	public String getStrError() throws IOException {
+	public String getErrorStr() throws IOException {
 		if (!StringUtils.hasText(strError)) {
 			try (FileInputStream error = new FileInputStream(errorFile)) {
 				strError = StreamUtils.toString(error, StreamUtils.DEFAULT_SIZE, charset);
@@ -62,11 +64,11 @@ public class CommandResult {
 		return strError;
 	}
 
-	public InputStream getStreamOutput() throws IOException {
+	public InputStream getOutputStream() throws IOException {
 		return Files.newInputStream(outputFile.toPath());
 	}
 
-	public InputStream getStreamError() throws IOException {
+	public InputStream getErrorStream() throws IOException {
 		return Files.newInputStream(errorFile.toPath());
 	}
 
