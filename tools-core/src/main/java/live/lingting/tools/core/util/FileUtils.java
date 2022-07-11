@@ -24,6 +24,8 @@ import live.lingting.tools.core.constant.FileConstants;
 @UtilityClass
 public class FileUtils {
 
+	private static final File TEMP_DIR = new File(System.getProperty("java.io.tmpdir"), "lingting.live");
+
 	private static final Map<String, String> MIME_TYPE;
 
 	static {
@@ -105,7 +107,10 @@ public class FileUtils {
 	}
 
 	public static File createTemp() throws IOException {
-		return File.createTempFile("lingting", ".temp");
+		if (!TEMP_DIR.exists()) {
+			TEMP_DIR.mkdirs();
+		}
+		return File.createTempFile("lingting", ".temp", TEMP_DIR);
 	}
 
 	public static File createTemp(InputStream in) throws IOException {
