@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import live.lingting.tools.core.util.FileUtils;
@@ -48,9 +48,6 @@ public class CommandResult {
 		return result;
 	}
 
-	/**
-	 * 本方法会读取流, 调用本方法后调用其他output处理方法可能会导致异常
-	 */
 	public String getStrOutput() throws IOException {
 		if (!StringUtils.hasText(strOutput)) {
 			try (FileInputStream output = new FileInputStream(outputFile)) {
@@ -60,30 +57,6 @@ public class CommandResult {
 		return strOutput;
 	}
 
-	/**
-	 * 本方法会读取流, 调用本方法后调用其他output处理方法可能会导致异常
-	 */
-	private byte[] getBytesOutput() throws IOException {
-		if (bytesOutput == null) {
-			try (FileInputStream output = new FileInputStream(outputFile)) {
-				bytesOutput = StreamUtils.read(output);
-			}
-		}
-		return bytesOutput;
-	}
-
-	/**
-	 * 本方法会读取流, 调用本方法后调用其他output处理方法可能会导致异常
-	 */
-	public void writeOutput(OutputStream out) throws IOException {
-		try (FileInputStream output = new FileInputStream(outputFile)) {
-			StreamUtils.write(output, out);
-		}
-	}
-
-	/**
-	 * 本方法会读取流, 调用本方法后调用其他error处理方法可能会导致异常
-	 */
 	public String getStrError() throws IOException {
 		if (!StringUtils.hasText(strError)) {
 			try (FileInputStream error = new FileInputStream(errorFile)) {
@@ -93,25 +66,12 @@ public class CommandResult {
 		return strError;
 	}
 
-	/**
-	 * 本方法会读取流, 调用本方法后调用其他error处理方法可能会导致异常
-	 */
-	public byte[] getBytesError() throws IOException {
-		if (bytesError == null) {
-			try (FileInputStream error = new FileInputStream(errorFile)) {
-				bytesError = StreamUtils.read(error);
-			}
-		}
-		return bytesError;
+	public InputStream getStreamOutput() throws IOException {
+		return Files.newInputStream(outputFile.toPath());
 	}
 
-	/**
-	 * 本方法会读取流, 调用本方法后调用其他error处理方法可能会导致异常
-	 */
-	public void writeError(OutputStream out) throws IOException {
-		try (FileInputStream error = new FileInputStream(errorFile)) {
-			StreamUtils.write(error, out);
-		}
+	public InputStream getStreamError() throws IOException {
+		return Files.newInputStream(errorFile.toPath());
 	}
 
 }
