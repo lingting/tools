@@ -50,7 +50,7 @@ public class CommandResult {
 	 */
 	public String getStrOutput() throws IOException {
 		if (!StringUtils.hasText(strOutput)) {
-			StreamUtils.toString(output, StreamUtils.DEFAULT_SIZE, charset);
+			strOutput = StreamUtils.toString(output, StreamUtils.DEFAULT_SIZE, charset);
 		}
 		return strOutput;
 	}
@@ -77,7 +77,7 @@ public class CommandResult {
 	 */
 	public String getStrError() throws IOException {
 		if (!StringUtils.hasText(strError)) {
-			StreamUtils.toString(error, StreamUtils.DEFAULT_SIZE, charset);
+			strError = StreamUtils.toString(error, StreamUtils.DEFAULT_SIZE, charset);
 		}
 		return strError;
 	}
