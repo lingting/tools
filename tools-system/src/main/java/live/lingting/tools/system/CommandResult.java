@@ -31,11 +31,7 @@ public class CommandResult {
 
 	protected String strOutput = null;
 
-	protected byte[] bytesOutput = null;
-
 	protected String strError = null;
-
-	protected byte[] bytesError = null;
 
 	public static CommandResult of(InputStream output, InputStream error, LocalDateTime startTime,
 			LocalDateTime endTime, Charset charset) throws IOException {
@@ -72,6 +68,21 @@ public class CommandResult {
 
 	public InputStream getStreamError() throws IOException {
 		return Files.newInputStream(errorFile.toPath());
+	}
+
+	public void clean() {
+		try {
+			Files.delete(outputFile.toPath());
+		}
+		catch (Exception e) {
+			//
+		}
+		try {
+			Files.delete(errorFile.toPath());
+		}
+		catch (Exception e) {
+			//
+		}
 	}
 
 }
