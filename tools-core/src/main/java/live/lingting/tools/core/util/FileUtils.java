@@ -5,7 +5,9 @@ import static live.lingting.tools.core.constant.FileConstants.POINT;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -100,6 +102,20 @@ public class FileUtils {
 		}
 
 		return list;
+	}
+
+	public static File createTemp() throws IOException {
+		return File.createTempFile("lingting", ".temp");
+	}
+
+	public static File createTemp(InputStream in) throws IOException {
+		File file = createTemp();
+
+		try (FileOutputStream out = new FileOutputStream(file)) {
+			StreamUtils.write(in, out);
+		}
+
+		return file;
 	}
 
 }

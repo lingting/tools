@@ -1,11 +1,14 @@
 package live.lingting.tools.system;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import lombok.Getter;
+import live.lingting.tools.core.util.FileUtils;
 import live.lingting.tools.core.util.StreamUtils;
 import live.lingting.tools.core.util.StringUtils;
 
@@ -14,9 +17,9 @@ import live.lingting.tools.core.util.StringUtils;
  */
 public class CommandResult {
 
-	protected InputStream output;
+	protected File outputFile;
 
-	protected InputStream error;
+	protected File errorFile;
 
 	private Charset charset;
 
@@ -35,10 +38,10 @@ public class CommandResult {
 	protected byte[] bytesError = null;
 
 	public static CommandResult of(InputStream output, InputStream error, LocalDateTime startTime,
-			LocalDateTime endTime, Charset charset) {
+			LocalDateTime endTime, Charset charset) throws IOException {
 		CommandResult result = new CommandResult();
-		result.output = output;
-		result.error = error;
+		result.outputFile = FileUtils.createTemp(output);
+		result.errorFile = FileUtils.createTemp(error);
 		result.charset = charset;
 		result.startTime = startTime;
 		result.endTime = endTime;
@@ -50,7 +53,9 @@ public class CommandResult {
 	 */
 	public String getStrOutput() throws IOException {
 		if (!StringUtils.hasText(strOutput)) {
-			strOutput = StreamUtils.toString(output, StreamUtils.DEFAULT_SIZE, charset);
+			try (FileInputStream output = new FileInputStream(outputFile)) {
+				strOutput = StreamUtils.toString(output, StreamUtils.DEFAULT_SIZE, charset);
+			}
 		}
 		return strOutput;
 	}
@@ -60,7 +65,9 @@ public class CommandResult {
 	 */
 	private byte[] getBytesOutput() throws IOException {
 		if (bytesOutput == null) {
-			bytesOutput = StreamUtils.read(output);
+			try (FileInputStream output = new FileInputStream(outputFile)) {
+				bytesOutput = StreamUtils.read(output);
+			}
 		}
 		return bytesOutput;
 	}
@@ -69,7 +76,9 @@ public class CommandResult {
 	 * 本方法会读取流, 调用本方法后调用其他output处理方法可能会导致异常
 	 */
 	public void writeOutput(OutputStream out) throws IOException {
-		StreamUtils.write(output, out);
+		try (FileInputStream output = new FileInputStream(outputFile)) {
+			StreamUtils.write(output, out);
+		}
 	}
 
 	/**
@@ -77,7 +86,9 @@ public class CommandResult {
 	 */
 	public String getStrError() throws IOException {
 		if (!StringUtils.hasText(strError)) {
-			strError = StreamUtils.toString(error, StreamUtils.DEFAULT_SIZE, charset);
+			try (FileInputStream error = new FileInputStream(errorFile)) {
+				strError = StreamUtils.toString(error, StreamUtils.DEFAULT_SIZE, charset);
+			}
 		}
 		return strError;
 	}
@@ -87,7 +98,9 @@ public class CommandResult {
 	 */
 	public byte[] getBytesError() throws IOException {
 		if (bytesError == null) {
-			bytesError = StreamUtils.read(error);
+			try (FileInputStream error = new FileInputStream(errorFile)) {
+				bytesError = StreamUtils.read(error);
+			}
 		}
 		return bytesError;
 	}
@@ -96,7 +109,9 @@ public class CommandResult {
 	 * 本方法会读取流, 调用本方法后调用其他error处理方法可能会导致异常
 	 */
 	public void writeError(OutputStream out) throws IOException {
-		StreamUtils.write(error, out);
+		try (FileInputStream error = new FileInputStream(errorFile)) {
+			StreamUtils.write(error, out);
+		}
 	}
 
 }

@@ -87,7 +87,7 @@ public class Command {
 	 * 需要: eg: exit().exit().exit()
 	 * </p>
 	 */
-	public CommandResult result() {
+	public CommandResult result() throws IOException {
 		return CommandResult.of(process.getInputStream(), process.getErrorStream(), startTime, LocalDateTime.now(),
 				charset);
 	}
