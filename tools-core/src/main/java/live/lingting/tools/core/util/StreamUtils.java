@@ -17,6 +17,12 @@ public class StreamUtils {
 
 	public static final int DEFAULT_SIZE = 1024 * 1024;
 
+	public static byte[] read(InputStream in) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		write(in, out);
+		return out.toByteArray();
+	}
+
 	public static void write(InputStream in, OutputStream out) throws IOException {
 		write(in, out, DEFAULT_SIZE);
 	}

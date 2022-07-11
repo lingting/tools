@@ -15,10 +15,11 @@
         <module>tools-http</module>
         <module>tools-json</module>
         <module>tools-core</module>
+        <module>tools-system</module>
     </modules>
 
     <properties>
-        <revision>2022.6.4-SNAPSHOT</revision>
+        <revision>2022.7.2-SNAPSHOT</revision>
 
         <jackson.version>2.12.5</jackson.version>
 
@@ -86,6 +87,11 @@
             <dependency>
                 <groupId>live.lingting</groupId>
                 <artifactId>tools-http</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>live.lingting</groupId>
+                <artifactId>tools-system</artifactId>
                 <version>${revision}</version>
             </dependency>
 
