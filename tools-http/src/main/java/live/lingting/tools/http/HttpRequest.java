@@ -244,37 +244,37 @@ public class HttpRequest {
 
 	public HttpRequest formMultipart(String contentType, Map<String, ?> map) {
 		MultipartBody.Builder builder = new MultipartBody.Builder();
-
+		final MediaType mediaType = MediaType.get(contentType);
+		builder.setType(mediaType);
 		map.forEach((key, val) -> {
 			if (val == null) {
 				//
 			}
 			else if (val instanceof Collection) {
-				((Collection<?>) val).forEach(v -> addFormDataPart(builder, contentType, key, v));
+				((Collection<?>) val).forEach(v -> addFormDataPart(builder, mediaType, key, v));
 			}
 			else if (val instanceof Iterable) {
-				((Iterable<?>) val).forEach(v -> addFormDataPart(builder, contentType, key, v));
+				((Iterable<?>) val).forEach(v -> addFormDataPart(builder, mediaType, key, v));
 			}
 			else if (val instanceof Iterator) {
-				((Iterator<?>) val).forEachRemaining(v -> addFormDataPart(builder, contentType, key, v));
+				((Iterator<?>) val).forEachRemaining(v -> addFormDataPart(builder, mediaType, key, v));
 			}
 			else if (val.getClass().isArray()) {
 				for (Object v : (Object[]) val) {
-					addFormDataPart(builder, contentType, key, v);
+					addFormDataPart(builder, mediaType, key, v);
 				}
 			}
 			else {
-				addFormDataPart(builder, contentType, key, val);
+				addFormDataPart(builder, mediaType, key, val);
 			}
 		});
 
 		return formMultipart(builder.build());
 	}
 
-	private void addFormDataPart(MultipartBody.Builder builder, String contentType, String key, Object o) {
+	private void addFormDataPart(MultipartBody.Builder builder, MediaType mediaType, String key, Object o) {
 		if (o instanceof File) {
-			builder.addFormDataPart(key, ((File) o).getName(),
-					RequestBody.create(MediaType.parse(contentType), (File) o));
+			builder.addFormDataPart(key, ((File) o).getName(), RequestBody.create(mediaType, (File) o));
 		}
 		else {
 			builder.addFormDataPart(key, o.toString());
