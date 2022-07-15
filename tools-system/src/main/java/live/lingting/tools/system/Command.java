@@ -4,7 +4,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 import live.lingting.tools.core.util.SystemUtils;
+import live.lingting.tools.system.exception.CommandTimeoutException;
 
 /**
  * @author lingting 2022/6/25 11:55
@@ -90,6 +92,15 @@ public class Command {
 	public CommandResult result() throws IOException {
 		return CommandResult.of(process.getInputStream(), process.getErrorStream(), startTime, LocalDateTime.now(),
 				charset);
+	}
+
+	public CommandResult result(long millis) throws InterruptedException, IOException, CommandTimeoutException {
+		if (process.waitFor(millis, TimeUnit.MILLISECONDS)) {
+			return result();
+		}
+		// 超时. 强行杀死子线程
+		process.destroyForcibly();
+		throw new CommandTimeoutException();
 	}
 
 	public void close() {
