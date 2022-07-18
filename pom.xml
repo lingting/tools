@@ -19,7 +19,7 @@
     </modules>
 
     <properties>
-        <revision>2022.7.2.2-SNAPSHOT</revision>
+        <revision>2022.7.2.3-SNAPSHOT</revision>
 
         <jackson.version>2.12.5</jackson.version>
 
@@ -249,8 +249,8 @@
     </developers>
 
     <scm>
-        <connection>scm:git:${scm.url}</connection>
-        <developerConnection>scm:git:${scm.url}</developerConnection>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>https://github.com/lingting/tools.git</url>
         <tag>HEAD</tag>
     </scm>

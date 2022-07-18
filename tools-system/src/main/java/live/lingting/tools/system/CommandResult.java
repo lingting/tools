@@ -8,7 +8,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import lombok.Getter;
-import live.lingting.tools.core.util.FileUtils;
 import live.lingting.tools.core.util.StreamUtils;
 import live.lingting.tools.core.util.StringUtils;
 
@@ -17,11 +16,9 @@ import live.lingting.tools.core.util.StringUtils;
  */
 public class CommandResult {
 
-	@Getter
-	protected File outputFile;
+	protected File stdOut;
 
-	@Getter
-	protected File errorFile;
+	protected File stdErr;
 
 	private Charset charset;
 
@@ -35,52 +32,60 @@ public class CommandResult {
 
 	protected String strError = null;
 
-	public static CommandResult of(InputStream output, InputStream error, LocalDateTime startTime,
-			LocalDateTime endTime, Charset charset) throws IOException {
+	public static CommandResult of(File stdOut, File stdErr, LocalDateTime startTime, LocalDateTime endTime,
+			Charset charset) {
 		CommandResult result = new CommandResult();
-		result.outputFile = FileUtils.createTemp(output);
-		result.errorFile = FileUtils.createTemp(error);
+		result.stdOut = stdOut;
+		result.stdErr = stdErr;
 		result.charset = charset;
 		result.startTime = startTime;
 		result.endTime = endTime;
 		return result;
 	}
 
-	public String getOutputStr() throws IOException {
+	public File stdOut() {
+		return stdOut;
+	}
+
+	public File stdErr() {
+		return stdErr;
+	}
+
+	public String stdOutStr() throws IOException {
 		if (!StringUtils.hasText(strOutput)) {
-			try (FileInputStream output = new FileInputStream(outputFile)) {
+			try (FileInputStream output = new FileInputStream(stdOut)) {
 				strOutput = StreamUtils.toString(output, StreamUtils.DEFAULT_SIZE, charset);
 			}
 		}
 		return strOutput;
 	}
 
-	public String getErrorStr() throws IOException {
+	public String stdErrStr() throws IOException {
 		if (!StringUtils.hasText(strError)) {
-			try (FileInputStream error = new FileInputStream(errorFile)) {
+			try (FileInputStream error = new FileInputStream(stdErr)) {
 				strError = StreamUtils.toString(error, StreamUtils.DEFAULT_SIZE, charset);
 			}
 		}
 		return strError;
 	}
 
-	public InputStream getOutputStream() throws IOException {
-		return Files.newInputStream(outputFile.toPath());
+	public InputStream stdOutStream() throws IOException {
+		return Files.newInputStream(stdOut.toPath());
 	}
 
-	public InputStream getErrorStream() throws IOException {
-		return Files.newInputStream(errorFile.toPath());
+	public InputStream stdErrStream() throws IOException {
+		return Files.newInputStream(stdErr.toPath());
 	}
 
 	public void clean() {
 		try {
-			Files.delete(outputFile.toPath());
+			Files.delete(stdOut.toPath());
 		}
 		catch (Exception e) {
 			//
 		}
 		try {
-			Files.delete(errorFile.toPath());
+			Files.delete(stdErr.toPath());
 		}
 		catch (Exception e) {
 			//

@@ -1,10 +1,14 @@
 package live.lingting.tools.system;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
+import live.lingting.tools.core.util.FileUtils;
+import live.lingting.tools.core.util.StringUtils;
 import live.lingting.tools.core.util.SystemUtils;
 import live.lingting.tools.system.exception.CommandTimeoutException;
 
@@ -19,7 +23,14 @@ public class Command {
 
 	private final Process process;
 
-	private final DataOutputStream out;
+	private final DataOutputStream stdIn;
+
+	/**
+	 * 标准输出
+	 */
+	private final File stdOut;
+
+	private final File stdErr;
 
 	private final String nextLine;
 
@@ -30,8 +41,22 @@ public class Command {
 	private final LocalDateTime startTime;
 
 	private Command(String init, String nextLine, String exit, Charset charset) throws IOException {
-		this.process = Runtime.getRuntime().exec(init);
-		this.out = new DataOutputStream(process.getOutputStream());
+		if (!StringUtils.hasText(init)) {
+			throw new IllegalArgumentException("Empty init");
+		}
+		StringTokenizer st = new StringTokenizer(init);
+		String[] cmdArray = new String[st.countTokens()];
+		for (int i = 0; st.hasMoreTokens(); i++) {
+			cmdArray[i] = st.nextToken();
+		}
+
+		this.stdOut = FileUtils.createTemp();
+		this.stdErr = FileUtils.createTemp();
+
+		// 重定向标准输出和标准错误到文件, 避免写入到缓冲区然后占满导致 waitFor 死锁
+		ProcessBuilder builder = new ProcessBuilder(cmdArray).redirectError(stdErr).redirectOutput(stdOut);
+		this.process = builder.start();
+		this.stdIn = new DataOutputStream(process.getOutputStream());
 		this.nextLine = nextLine;
 		this.exit = exit;
 		this.charset = charset;
@@ -42,11 +67,11 @@ public class Command {
 	 * 获取命令操作实例
 	 * @param init 初始命令
 	 */
-	public static Command instance(String init) throws IOException {
-		return instance(init, NEXT_LINE, EXIT, SystemUtils.charset());
+	public static Command of(String init) throws IOException {
+		return of(init, NEXT_LINE, EXIT, SystemUtils.charset());
 	}
 
-	public static Command instance(String init, String nextLine, String exit, Charset charset) throws IOException {
+	public static Command of(String init, String nextLine, String exit, Charset charset) throws IOException {
 		return new Command(init, nextLine, exit, charset);
 	}
 
@@ -54,8 +79,8 @@ public class Command {
 	 * 换到下一行
 	 */
 	public Command line() throws IOException {
-		out.writeBytes(nextLine);
-		out.flush();
+		stdIn.writeBytes(nextLine);
+		stdIn.flush();
 		return this;
 	}
 
@@ -63,7 +88,7 @@ public class Command {
 	 * 写入通道退出指令
 	 */
 	public Command exit() throws IOException {
-		out.writeBytes(exit);
+		stdIn.writeBytes(exit);
 		return line();
 	}
 
@@ -72,7 +97,7 @@ public class Command {
 	 * @param str 单行指令
 	 */
 	public Command exec(String str) throws IOException {
-		out.writeBytes(str);
+		stdIn.writeBytes(str);
 		return line();
 	}
 
@@ -89,11 +114,24 @@ public class Command {
 	 * 需要: eg: exit().exit().exit()
 	 * </p>
 	 */
-	public CommandResult result() throws IOException {
-		return CommandResult.of(process.getInputStream(), process.getErrorStream(), startTime, LocalDateTime.now(),
-				charset);
+	public CommandResult result() throws IOException, InterruptedException {
+		process.waitFor();
+		return CommandResult.of(stdOut, stdErr, startTime, LocalDateTime.now(), charset);
 	}
 
+	/**
+	 * 等待命令执行完成
+	 * <h3>如果 process 是通过 {@link Runtime#exec}方法构建的, 那么{@link Process#waitFor}方法可能会导致线程卡死,
+	 * 具体原因如下</h3>
+	 * <p>
+	 * 终端缓冲区大小有限, 在缓冲区被写满之后, 会子线程会挂起,等待缓冲区内容被读, 然后才继续写. 如果此时主线程也在waitFor()等待子线程结束, 就卡死了
+	 * </p>
+	 * <p>
+	 * 即便是先读取返回结果在调用此方法也可能会导致卡死. 比如: 先读取标准输出流, 还没读完, 缓冲区被错误输出流写满了.
+	 * </p>
+	 * @param millis 等待时间, 单位: 毫秒
+	 * @return live.lingting.tools.system.CommandResult
+	 */
 	public CommandResult result(long millis) throws InterruptedException, IOException, CommandTimeoutException {
 		if (process.waitFor(millis, TimeUnit.MILLISECONDS)) {
 			return result();
