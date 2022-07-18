@@ -11,8 +11,13 @@ import sun.awt.OSInfo;
 @UtilityClass
 public class SystemUtils {
 
+	/**
+	 * 当前系统是否为Windows系统, 参考以下系统API
+	 * @see OSInfo#getOSType()
+	 * @return boolean
+	 */
 	public static boolean isWindows() {
-		return OSInfo.getOSType().equals(OSInfo.OSType.WINDOWS);
+		return System.getProperty("os.name").contains("Windows");
 	}
 
 	/**

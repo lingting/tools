@@ -34,7 +34,6 @@ public class ClassUtils {
 	 * 确定class是否可以被加载
 	 * @param className 完整类名
 	 * @param classLoader 类加载
-	 * @author lingting 2021-02-25 21:17
 	 */
 	public static boolean isPresent(String className, ClassLoader classLoader) {
 		if (CACHE.containsKey(className)) {
