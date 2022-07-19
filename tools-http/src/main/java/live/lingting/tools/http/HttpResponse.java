@@ -2,6 +2,7 @@ package live.lingting.tools.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.function.Consumer;
 import okhttp3.Headers;
 import okhttp3.Response;
 import live.lingting.tools.core.util.StreamUtils;
@@ -61,6 +62,10 @@ public class HttpResponse<T> {
 		}
 
 		return body;
+	}
+
+	public void accept(Consumer<Response> consumer) {
+		consumer.accept(response);
 	}
 
 	public void write(OutputStream out) throws IOException {

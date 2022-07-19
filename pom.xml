@@ -19,7 +19,7 @@
     </modules>
 
     <properties>
-        <revision>2022.7.2.3-SNAPSHOT</revision>
+        <revision>2022.7.2.4-SNAPSHOT</revision>
 
         <jackson.version>2.12.5</jackson.version>
 
