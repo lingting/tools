@@ -1,8 +1,8 @@
 package live.lingting.tools.system;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.StringTokenizer;
@@ -23,7 +23,7 @@ public class Command {
 
 	private final Process process;
 
-	private final DataOutputStream stdIn;
+	private final OutputStream stdIn;
 
 	/**
 	 * 标准输出
@@ -56,7 +56,7 @@ public class Command {
 		// 重定向标准输出和标准错误到文件, 避免写入到缓冲区然后占满导致 waitFor 死锁
 		ProcessBuilder builder = new ProcessBuilder(cmdArray).redirectError(stdErr).redirectOutput(stdOut);
 		this.process = builder.start();
-		this.stdIn = new DataOutputStream(process.getOutputStream());
+		this.stdIn = process.getOutputStream();
 		this.nextLine = nextLine;
 		this.exit = exit;
 		this.charset = charset;
@@ -64,31 +64,43 @@ public class Command {
 	}
 
 	/**
-	 * 获取命令操作实例
+	 * 获取命令操作实例. 此实例默认使用系统字符集, 如果发现部分带非英文字符和特殊符号命令执行异常, 建议使用
+	 * {@link Command#of(String, Charset)} 自定义对应的字符集
 	 * @param init 初始命令
 	 */
 	public static Command of(String init) throws IOException {
-		return of(init, NEXT_LINE, EXIT, SystemUtils.charset());
+		return of(init, SystemUtils.charset());
+	}
+
+	/**
+	 * 推荐使用此实例
+	 */
+	public static Command of(String init, Charset charset) throws IOException {
+		return of(init, NEXT_LINE, EXIT, charset);
 	}
 
 	public static Command of(String init, String nextLine, String exit, Charset charset) throws IOException {
 		return new Command(init, nextLine, exit, charset);
 	}
 
+	public Command write(String str) throws IOException {
+		stdIn.write(str.getBytes(charset));
+		stdIn.flush();
+		return this;
+	}
+
 	/**
 	 * 换到下一行
 	 */
 	public Command line() throws IOException {
-		stdIn.writeBytes(nextLine);
-		stdIn.flush();
-		return this;
+		return write(nextLine);
 	}
 
 	/**
 	 * 写入通道退出指令
 	 */
 	public Command exit() throws IOException {
-		stdIn.writeBytes(exit);
+		write(exit);
 		return line();
 	}
 
@@ -97,7 +109,7 @@ public class Command {
 	 * @param str 单行指令
 	 */
 	public Command exec(String str) throws IOException {
-		stdIn.writeBytes(str);
+		write(str);
 		return line();
 	}
 
