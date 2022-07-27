@@ -9,9 +9,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +28,7 @@ import live.lingting.tools.core.constant.FileConstants;
 @UtilityClass
 public class FileUtils {
 
-	private static final File TEMP_DIR = new File(System.getProperty("java.io.tmpdir"), "lingting.live");
+	private static final File TEMP_DIR = new File(SystemUtils.tempDir(), "lingting.live");
 
 	private static final Map<String, String> MIME_TYPE;
 
@@ -121,6 +125,19 @@ public class FileUtils {
 		}
 
 		return file;
+	}
+
+	public static Path copy(File source, File target, boolean override, CopyOption... options) throws IOException {
+		List<CopyOption> list = new ArrayList<>();
+		if (override) {
+			list.add(StandardCopyOption.REPLACE_EXISTING);
+		}
+
+		if (options != null && options.length > 0) {
+			list.addAll(Arrays.asList(options));
+		}
+
+		return Files.copy(source.toPath(), target.toPath(), list.toArray(new CopyOption[0]));
 	}
 
 }

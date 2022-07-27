@@ -62,6 +62,21 @@ public class StreamUtils {
 		return outputStream.toString(charset.name());
 	}
 
+	/**
+	 * 从流中读取 int
+	 * @author lingting 2021-07-22 14:54
+	 */
+	public static int readInt(InputStream is, int noOfBytes, boolean bigEndian) throws IOException {
+		int ret = 0;
+		int sv = bigEndian ? ((noOfBytes - 1) * 8) : 0;
+		int cnt = bigEndian ? -8 : 8;
+		for (int i = 0; i < noOfBytes; i++) {
+			ret |= is.read() << sv;
+			sv += cnt;
+		}
+		return ret;
+	}
+
 	public static void close(Closeable closeable) {
 		try {
 			if (closeable != null) {

@@ -126,7 +126,7 @@ public class Command {
 	 * 需要: eg: exit().exit().exit()
 	 * </p>
 	 */
-	public CommandResult result() throws IOException, InterruptedException {
+	public CommandResult result() throws InterruptedException {
 		process.waitFor();
 		return CommandResult.of(stdOut, stdErr, startTime, LocalDateTime.now(), charset);
 	}
@@ -144,7 +144,7 @@ public class Command {
 	 * @param millis 等待时间, 单位: 毫秒
 	 * @return live.lingting.tools.system.CommandResult
 	 */
-	public CommandResult result(long millis) throws InterruptedException, IOException, CommandTimeoutException {
+	public CommandResult result(long millis) throws InterruptedException, CommandTimeoutException {
 		if (process.waitFor(millis, TimeUnit.MILLISECONDS)) {
 			return result();
 		}

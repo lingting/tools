@@ -35,4 +35,8 @@ public class SystemUtils {
 		return File.separator;
 	}
 
+	public static File tempDir() {
+		return new File(System.getProperty("java.io.tmpdir"));
+	}
+
 }
