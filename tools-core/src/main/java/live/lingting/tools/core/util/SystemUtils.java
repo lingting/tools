@@ -1,9 +1,10 @@
 package live.lingting.tools.core.util;
 
-import java.io.File;
-import java.nio.charset.Charset;
 import lombok.experimental.UtilityClass;
 import sun.awt.OSInfo;
+
+import java.io.File;
+import java.nio.charset.Charset;
 
 /**
  * @author lingting 2022/6/25 12:10
@@ -35,8 +36,12 @@ public class SystemUtils {
 		return File.separator;
 	}
 
-	public static File tempDir() {
+	public static File tmpDir() {
 		return new File(System.getProperty("java.io.tmpdir"));
+	}
+
+	public static File tmpDirLingting() {
+		return new File(System.getProperty("java.io.tmpdir"), "lingting.live");
 	}
 
 }

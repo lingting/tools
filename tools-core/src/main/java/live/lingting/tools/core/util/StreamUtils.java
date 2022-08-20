@@ -1,13 +1,17 @@
 package live.lingting.tools.core.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import lombok.experimental.UtilityClass;
+import java.nio.file.Files;
 
 /**
  * @author lingting
@@ -86,6 +90,54 @@ public class StreamUtils {
 		catch (Exception e) {
 			//
 		}
+	}
+
+	/**
+	 * 克隆文件流
+	 * <p color="red">
+	 * 注意: 在使用后及时关闭复制流
+	 * </p>
+	 * @param stream 源流
+	 * @param amounts 数量
+	 * @return 返回指定数量的从源流复制出来的只读流
+	 * @author lingting 2021-04-16 16:18
+	 */
+	public static InputStream[] clone(InputStream stream, Integer amounts) throws IOException {
+		return clone(stream, amounts, DEFAULT_SIZE);
+	}
+
+	public static InputStream[] clone(InputStream stream, Integer amounts, int size) throws IOException {
+		InputStream[] streams = new InputStream[amounts];
+		File[] files = new File[amounts];
+		FileOutputStream[] outs = new FileOutputStream[amounts];
+
+		byte[] buffer = new byte[size < 1 ? DEFAULT_SIZE : size];
+		int len;
+
+		while ((len = stream.read(buffer)) > -1) {
+			for (int i = 0, outsLength = outs.length; i < outsLength; i++) {
+				FileOutputStream out = outs[i];
+				if (out == null) {
+					files[i] = FileUtils.createTemp("clone." + i + "." + System.currentTimeMillis());
+					out = new FileOutputStream(files[i]);
+					outs[i] = out;
+				}
+				out.write(buffer, 0, len);
+			}
+		}
+
+		for (int i = 0; i < files.length; i++) {
+			try {
+				outs[i].close();
+			}
+			catch (IOException e) {
+				//
+			}
+
+			streams[i] = Files.newInputStream(files[i].toPath());
+		}
+
+		return streams;
 	}
 
 }

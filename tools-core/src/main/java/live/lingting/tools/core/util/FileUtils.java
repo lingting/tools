@@ -1,10 +1,9 @@
 package live.lingting.tools.core.util;
 
-import static live.lingting.tools.core.constant.FileConstants.POINT;
+import live.lingting.tools.core.constant.FileConstants;
+import lombok.experimental.UtilityClass;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +18,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.experimental.UtilityClass;
-import live.lingting.tools.core.constant.FileConstants;
+
+import static live.lingting.tools.core.constant.FileConstants.POINT;
 
 /**
  * @author lingting
@@ -28,7 +27,7 @@ import live.lingting.tools.core.constant.FileConstants;
 @UtilityClass
 public class FileUtils {
 
-	private static final File TEMP_DIR = new File(SystemUtils.tempDir(), "lingting.live");
+	private static final File TEMP_DIR = new File(SystemUtils.tmpDir(), "lingting.live");
 
 	private static final Map<String, String> MIME_TYPE;
 
@@ -72,10 +71,6 @@ public class FileUtils {
 		return contentType;
 	}
 
-	public static FileInputStream getInputStream(File file) throws FileNotFoundException {
-		return new FileInputStream(file);
-	}
-
 	/**
 	 * 扫描指定路径下所有文件
 	 * @param path 指定路径
@@ -110,11 +105,71 @@ public class FileUtils {
 		return list;
 	}
 
-	public static File createTemp() throws IOException {
-		if (!TEMP_DIR.exists()) {
-			TEMP_DIR.mkdirs();
+	/**
+	 * 创建指定文件夹, 已存在时不会重新创建
+	 * @param dir 文件夹.
+	 * @throws IOException 创建失败时抛出
+	 */
+	public static void createDir(File dir) throws IOException {
+		if (dir.exists()) {
+			return;
 		}
-		return File.createTempFile("lingting", ".temp", TEMP_DIR);
+
+		if (!dir.mkdirs()) {
+			throw new IOException("文件夹创建失败! 文件夹路径: " + dir.getAbsolutePath());
+		}
+	}
+
+	/**
+	 * 创建指定文件, 已存在时不会重新创建
+	 * @param file 文件.
+	 * @throws IOException 创建失败时抛出
+	 */
+	public static void createFile(File file) throws IOException {
+		if (file.exists()) {
+			return;
+		}
+
+		if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+			throw new IOException("父文件创建失败! 文件路径: " + file.getAbsolutePath());
+		}
+
+		if (!file.createNewFile()) {
+			throw new IOException("文件创建失败! 文件路径: " + file.getAbsolutePath());
+		}
+	}
+
+	/**
+	 * 创建临时文件
+	 */
+	public static File createTemp() throws IOException {
+		return createTemp("lingting");
+	}
+
+	/**
+	 * 创建临时文件
+	 * @param trait 文件特征
+	 * @return 临时文件对象
+	 */
+	public static File createTemp(String trait) throws IOException {
+		return createTemp(trait, TEMP_DIR);
+	}
+
+	/**
+	 * 创建临时文件
+	 * @param trait 文件特征
+	 * @param dir 文件存放位置
+	 * @return 临时文件对象
+	 */
+	public static File createTemp(String trait, File dir) throws IOException {
+		try {
+			createDir(dir);
+		}
+		catch (IOException e) {
+			throw new IOException("临时文件夹创建失败! 文件夹地址: " + dir.getAbsolutePath(), e);
+		}
+
+		return File.createTempFile(trait, "tmp", dir);
 	}
 
 	public static File createTemp(InputStream in) throws IOException {
