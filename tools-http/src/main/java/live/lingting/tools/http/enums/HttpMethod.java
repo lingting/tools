@@ -9,11 +9,38 @@ public enum HttpMethod {
 	 * GET
 	 */
 	GET,
-
 	/**
 	 * POST
 	 */
 	POST,
+	/**
+	 * PATCH
+	 */
+	PATCH,
+	/**
+	 * PUT
+	 */
+	PUT,
+	/**
+	 * DELETE
+	 */
+	DELETE,
+	/**
+	 * MOVE
+	 */
+	MOVE,
+	/**
+	 * PROPPATCH
+	 */
+	PROPPATCH,
+	/**
+	 * REPORT
+	 */
+	REPORT,
+	/**
+	 * HEAD
+	 */
+	HEAD,
 
 	;
 
