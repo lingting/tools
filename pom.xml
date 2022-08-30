@@ -17,6 +17,7 @@
         <module>tools-json</module>
         <module>tools-core</module>
         <module>tools-system</module>
+        <module>tools-oss</module>
     </modules>
 
     <properties>
