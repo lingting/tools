@@ -1,17 +1,19 @@
 package live.lingting.tools.http;
 
+import live.lingting.tools.core.util.StreamUtils;
+import live.lingting.tools.json.JacksonUtils;
+import okhttp3.Headers;
+import okhttp3.Response;
+
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.function.Consumer;
-import okhttp3.Headers;
-import okhttp3.Response;
-import live.lingting.tools.core.util.StreamUtils;
-import live.lingting.tools.json.JacksonUtils;
 
 /**
  * @author lingting
  */
-public class HttpResponse<T> {
+public class HttpResponse<T> implements Closeable {
 
 	private final Response response;
 
@@ -70,6 +72,11 @@ public class HttpResponse<T> {
 
 	public void write(OutputStream out) throws IOException {
 		StreamUtils.write(response.body().byteStream(), out);
+	}
+
+	@Override
+	public void close() {
+		StreamUtils.close(response);
 	}
 
 }
