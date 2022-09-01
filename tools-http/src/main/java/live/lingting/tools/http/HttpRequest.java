@@ -1,18 +1,10 @@
 package live.lingting.tools.http;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.Proxy;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
+import live.lingting.tools.core.util.CollectionUtils;
+import live.lingting.tools.http.enums.HttpContentType;
+import live.lingting.tools.http.enums.HttpHeader;
+import live.lingting.tools.http.enums.HttpMethod;
+import live.lingting.tools.http.exception.HttpException;
 import lombok.Getter;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,12 +16,21 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import live.lingting.tools.core.util.CollectionUtils;
-import live.lingting.tools.http.enums.HttpContentType;
-import live.lingting.tools.http.enums.HttpHeader;
-import live.lingting.tools.http.enums.HttpMethod;
-import live.lingting.tools.http.exception.HttpException;
 import okio.ByteString;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
+import java.io.File;
+import java.io.IOException;
+import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lingting

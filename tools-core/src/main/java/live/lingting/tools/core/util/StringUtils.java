@@ -1,8 +1,9 @@
 package live.lingting.tools.core.util;
 
+import live.lingting.tools.core.constant.StringConstants;
+
 import java.io.CharArrayWriter;
 import java.util.Iterator;
-import live.lingting.tools.core.constant.StringConstants;
 
 /**
  * @author lingting

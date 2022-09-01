@@ -1,8 +1,8 @@
 package live.lingting.tools.core.util;
 
+import live.lingting.tools.core.constant.CharConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import live.lingting.tools.core.constant.CharConstants;
 
 /**
  * @author lingting

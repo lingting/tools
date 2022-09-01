@@ -1,13 +1,14 @@
 package live.lingting.tools.system;
 
+import live.lingting.tools.system.exception.CommandTimeoutException;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import live.lingting.tools.system.exception.CommandTimeoutException;
 
 /**
  * @author lingting 2022/6/25 12:28

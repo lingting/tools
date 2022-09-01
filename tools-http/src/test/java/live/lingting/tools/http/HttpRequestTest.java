@@ -1,9 +1,10 @@
 package live.lingting.tools.http;
 
-import java.io.IOException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 /**
  * @author lingting 2022/6/10 17:06

@@ -5,14 +5,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import java.lang.reflect.Type;
-import java.util.function.Consumer;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import live.lingting.tools.core.util.ClassUtils;
 import live.lingting.tools.json.jackson.JavaTimeModule;
 import live.lingting.tools.json.jackson.NullSerializerModifier;
+import lombok.Getter;
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+
+import java.lang.reflect.Type;
+import java.util.function.Consumer;
 
 /**
  * @author lingting 2021/6/9 14:28
@@ -103,6 +104,15 @@ public class JacksonUtils {
 	@SneakyThrows
 	public static <T> T toObj(String json, TypeReference<T> t) {
 		return mapper.readValue(json, t);
+	}
+
+	public static <T> T toObj(String json, TypeReference<T> t, T defaultVal) {
+		try {
+			return mapper.readValue(json, t);
+		}
+		catch (Exception e) {
+			return defaultVal;
+		}
 	}
 
 	private static boolean classIsPresent(String className) {

@@ -1,21 +1,22 @@
 package live.lingting.tools.http.https;
 
-import static live.lingting.tools.http.constant.HttpConstants.SSL_V3;
-import static live.lingting.tools.http.constant.HttpConstants.TLS_V1;
-import static live.lingting.tools.http.constant.HttpConstants.TLS_V11;
-import static live.lingting.tools.http.constant.HttpConstants.TLS_V12;
+import live.lingting.tools.http.exception.HttpException;
+import lombok.experimental.UtilityClass;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import lombok.experimental.UtilityClass;
-import live.lingting.tools.http.exception.HttpException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import static live.lingting.tools.http.constant.HttpConstants.SSL_V3;
+import static live.lingting.tools.http.constant.HttpConstants.TLS_V1;
+import static live.lingting.tools.http.constant.HttpConstants.TLS_V11;
+import static live.lingting.tools.http.constant.HttpConstants.TLS_V12;
 
 /**
  * @author lingting

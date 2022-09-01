@@ -1,8 +1,9 @@
 package live.lingting.tools.core.util;
 
-import java.util.concurrent.ThreadLocalRandom;
-import lombok.experimental.UtilityClass;
 import live.lingting.tools.core.constant.CharConstants;
+import lombok.experimental.UtilityClass;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author lingting
