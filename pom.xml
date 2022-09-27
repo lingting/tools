@@ -22,7 +22,7 @@
 
     <properties>
         <!--SNAPSHOT-->
-        <revision>2022.8.4-SNAPSHOT</revision>
+        <revision>2022.9.5</revision>
         <!--json-->
         <jackson.version>2.12.5</jackson.version>
         <hutool.version>5.7.19</hutool.version>
