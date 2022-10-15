@@ -18,11 +18,12 @@
         <module>tools-core</module>
         <module>tools-system</module>
         <module>tools-oss</module>
+        <module>tools-spring</module>
     </modules>
 
     <properties>
         <!--SNAPSHOT-->
-        <revision>2022.9.5-SNAPSHOT</revision>
+        <revision>2022.9.5.2-SNAPSHOT</revision>
         <!--spring-->
         <spring-boot.version>3.0.0-M5</spring-boot.version>
         <hutool.version>5.8.8</hutool.version>
@@ -99,6 +100,11 @@
                 <artifactId>tools-system</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>live.lingting</groupId>
+                <artifactId>tools-spring</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -131,7 +137,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 
     <build>
         <finalName>${project.artifactId}</finalName>
@@ -339,5 +344,28 @@
             </build>
         </profile>
     </profiles>
+
+    <!--兼容spring测试版-->
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
