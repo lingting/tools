@@ -58,4 +58,30 @@ public class HttpConstants {
 
 	public static final String TLS_V12 = "TLSv1.2";
 
+	public static final String HEADER_APPLICATION_JSON = "application/json";
+
+	public static final String HEADER_APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
+
+	public static final String HEADER_MULTIPART_FORM_DATA = "multipart/form-data";
+
+	public static final String HEADER_APPLICATION_XML = "application/xml";
+
+	public static final String HEADER_APPLICATION_PDF = "application/pdf";
+
+	public static final String HEADER_APPLICATION_MSWORD = "application/msword";
+
+	public static final String HEADER_APPLICATION_OCTET_STREAM = "application/octet-stream";
+
+	public static final String HEADER_TEXT_HTML = "text/html";
+
+	public static final String HEADER_TEXT_PLAIN = "text/plain";
+
+	public static final String HEADER_TEXT_XML = "text/xml";
+
+	public static final String HEADER_IMAGE_GIF = "image/gif";
+
+	public static final String HEADER_IMAGE_JPEG = "image/jpeg";
+
+	public static final String HEADER_IMAGE_PNG = "image/png";
+
 }
