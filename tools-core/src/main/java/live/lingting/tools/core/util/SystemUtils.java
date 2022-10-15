@@ -1,7 +1,6 @@
 package live.lingting.tools.core.util;
 
 import lombok.experimental.UtilityClass;
-import sun.awt.OSInfo;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -14,7 +13,7 @@ public class SystemUtils {
 
 	/**
 	 * 当前系统是否为Windows系统, 参考以下系统API
-	 * @see OSInfo#getOSType()
+	 * @see sun.awt.OSInfo#getOSType()
 	 * @return boolean
 	 */
 	public static boolean isWindows() {
