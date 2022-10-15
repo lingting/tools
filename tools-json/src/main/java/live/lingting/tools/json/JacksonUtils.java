@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import live.lingting.tools.core.util.ClassUtils;
 import live.lingting.tools.json.jackson.JavaTimeModule;
-import live.lingting.tools.json.jackson.NullSerializerModifier;
+import live.lingting.tools.json.jackson.NullSerializerProvider;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -41,9 +41,10 @@ public class JacksonUtils {
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		// 单值元素可以被设置成 array, 防止处理 ["a"] 为 List<String> 时报错
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+		// 空对象不报错
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-		mapper.setSerializerFactory(mapper.getSerializerFactory().withSerializerModifier(new NullSerializerModifier()));
-		mapper.enable(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature());
+		// 空值处理
+		mapper.setSerializerProvider(new NullSerializerProvider());
 		// 时间解析器
 		mapper.registerModule(new JavaTimeModule());
 		if (ClassUtils.isPresent(JSON_READ_FEATURE_CLASS, JacksonUtils.class.getClassLoader())) {
