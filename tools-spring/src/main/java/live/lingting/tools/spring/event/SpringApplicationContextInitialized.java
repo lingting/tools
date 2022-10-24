@@ -1,6 +1,7 @@
 package live.lingting.tools.spring.event;
 
 import live.lingting.tools.spring.util.SpringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
 import org.springframework.context.ApplicationListener;
 
@@ -9,10 +10,12 @@ import org.springframework.context.ApplicationListener;
  *
  * @author lingting 2022/10/15 15:27
  */
-public class ApplicationContextInitialized implements ApplicationListener<ApplicationContextInitializedEvent> {
+@Slf4j
+public class SpringApplicationContextInitialized implements ApplicationListener<ApplicationContextInitializedEvent> {
 
 	@Override
 	public void onApplicationEvent(ApplicationContextInitializedEvent event) {
+		log.debug("spring application context initialized");
 		// 给 spring utils 注入 spring 上下文
 		SpringUtils.setContext(event.getApplicationContext());
 	}
