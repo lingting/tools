@@ -20,7 +20,7 @@ public class Command {
 
 	public static final String NEXT_LINE = SystemUtils.line();
 
-	public static final String EXIT = "exit";
+	public static final String EXIT_COMMAND = "exit";
 
 	private final Process process;
 
@@ -77,7 +77,7 @@ public class Command {
 	 * 推荐使用此实例
 	 */
 	public static Command of(String init, Charset charset) throws IOException {
-		return of(init, NEXT_LINE, EXIT, charset);
+		return of(init, NEXT_LINE, EXIT_COMMAND, charset);
 	}
 
 	public static Command of(String init, String nextLine, String exit, Charset charset) throws IOException {

@@ -70,10 +70,11 @@ class CommandTest {
 		stdIn.writeBytes("screencap -p && sleep .1 | sed 's/^M$//'");
 		stdIn.writeBytes(Command.NEXT_LINE);
 		stdIn.flush();
-		stdIn.writeBytes(Command.EXIT);
+		stdIn.writeBytes(Command.EXIT_COMMAND);
 		stdIn.writeBytes(Command.NEXT_LINE);
 		stdIn.flush();
 		process.waitFor();
+		Assertions.assertNotNull(process);
 	}
 
 }
