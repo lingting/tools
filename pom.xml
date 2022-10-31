@@ -19,6 +19,8 @@
         <module>tools-system</module>
         <module>tools-oss</module>
         <module>tools-spring</module>
+        <module>tools-starters</module>
+        <module>tools-security</module>
     </modules>
 
     <properties>
@@ -106,6 +108,23 @@
             <dependency>
                 <groupId>live.lingting</groupId>
                 <artifactId>tools-spring</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>live.lingting</groupId>
+                <artifactId>tools-security</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!--starters-->
+            <dependency>
+                <groupId>live.lingting</groupId>
+                <artifactId>tools-starters</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>live.lingting</groupId>
+                <artifactId>tools-spring-boot-starters-security</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -288,7 +307,6 @@
                         <configuration>
                             <serverId>ossrh</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <!--<autoReleaseAfterClose>true</autoReleaseAfterClose>-->
                         </configuration>
                     </plugin>
                     <plugin>
