@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 
 /**
  * @author lingting 2022/6/10 17:06
@@ -41,6 +43,17 @@ class HttpRequestTest {
 			}
 		});
 		Thread.sleep(1000);
+	}
+
+	@Test
+	@SneakyThrows
+	void proxy() {
+		HttpRequest request = HttpRequest.get(
+				"https://search.gitee.com/?q=tools&type=repository&prec_filter=true&fork_filter=true&rec_filter=false&gvp_filter=false&lang=java");
+		request.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 9876)));
+		String body = request.execSync().body();
+		Assertions.assertNotNull(body);
+		System.out.println(body);
 	}
 
 }

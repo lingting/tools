@@ -1,13 +1,16 @@
 package live.lingting.tools.http;
 
 import live.lingting.tools.core.util.CollectionUtils;
+import live.lingting.tools.http.core.HttpKeepCookieJar;
 import live.lingting.tools.http.enums.HttpContentType;
 import live.lingting.tools.http.enums.HttpHeader;
 import live.lingting.tools.http.enums.HttpMethod;
 import live.lingting.tools.http.exception.HttpException;
+import live.lingting.tools.http.https.DefaultHttps;
 import lombok.Getter;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Cookie;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -36,6 +39,8 @@ import java.util.concurrent.TimeUnit;
  * @author lingting
  */
 public class HttpRequest {
+
+	private final HttpKeepCookieJar keepCookieJar = new HttpKeepCookieJar();
 
 	@Getter
 	private HttpMethod method;
@@ -360,13 +365,22 @@ public class HttpRequest {
 		return this;
 	}
 
+	public HttpRequest httpsDisabledSsl() {
+		return https(DefaultHttps.HOSTNAME_VERIFIER, DefaultHttps.SSF, DefaultHttps.TRUST_MANAGER);
+	}
+
+	public HttpRequest addCookie(Cookie cookie) {
+		keepCookieJar.addCookie(cookie.domain(), cookie);
+		return this;
+	}
+
 	public HttpResponse<String> execSync() throws HttpException {
 		return execSync(String.class);
 	}
 
 	public <T> HttpResponse<T> execSync(Class<T> cls) throws HttpException {
 		try {
-			Response response = clientBuilder().build().newCall(requestBuilder().build()).execute();
+			Response response = call().execute();
 			return new HttpResponse<>(response, cls);
 		}
 		catch (Exception e) {
@@ -376,7 +390,7 @@ public class HttpRequest {
 
 	public <T> void execAsync(Class<T> cls, HttpCallback<T> callback) {
 		try {
-			clientBuilder().build().newCall(requestBuilder().build()).enqueue(new Callback() {
+			call().enqueue(new Callback() {
 				@Override
 				public void onFailure(Call call, IOException e) {
 					callback.onFailure(HttpRequest.this, e);
@@ -393,10 +407,14 @@ public class HttpRequest {
 		}
 	}
 
+	public Call call() {
+		return clientBuilder().build().newCall(requestBuilder().build());
+	}
+
 	public OkHttpClient.Builder clientBuilder() {
 		OkHttpClient.Builder builder = new OkHttpClient().newBuilder()
 				.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS).readTimeout(readTimeout, TimeUnit.MILLISECONDS)
-				.proxy(proxy);
+				.proxy(proxy).cookieJar(keepCookieJar);
 
 		if (ssf != null) {
 			builder.sslSocketFactory(ssf, trustManager).hostnameVerifier(hostnameVerifier);
