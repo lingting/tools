@@ -48,10 +48,17 @@ public class ThreadPool {
 	}
 
 	/**
-	 * 线程池是否正在执行任务
+	 * 线程池是否活跃
 	 */
 	public boolean isRunning() {
-		return getPool().getTaskCount() > 0;
+		return getCount() > 0;
+	}
+
+	/**
+	 * 线程当前活跃数量
+	 */
+	public long getCount() {
+		return getPool().getTaskCount();
 	}
 
 	public void execute(Runnable runnable) {
@@ -59,6 +66,7 @@ public class ThreadPool {
 	}
 
 	@RequiredArgsConstructor
+    @SuppressWarnings("java:S1181")
 	public static class ExceptionRunnable implements Runnable {
 
 		private final Runnable runnable;
