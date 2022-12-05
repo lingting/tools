@@ -27,11 +27,11 @@ public class SystemUtils {
 		return Charset.forName(System.getProperty("sun.jnu.encoding"));
 	}
 
-	public static String line() {
+	public static String lineSeparator() {
 		return System.lineSeparator();
 	}
 
-	public static String file() {
+	public static String fileSeparator() {
 		return File.separator;
 	}
 
@@ -40,7 +40,23 @@ public class SystemUtils {
 	}
 
 	public static File tmpDirLingting() {
-		return new File(System.getProperty("java.io.tmpdir"), "lingting.live");
+		return new File(System.getProperty("java.io.tmpdir"), "lingting");
+	}
+
+	public static File homeDir() {
+		return new File(System.getProperty("user.home"));
+	}
+
+	public static File homeDirLingting() {
+		return new File(System.getProperty("user.home"), ".lingting");
+	}
+
+	public static File workDir() {
+		return new File(System.getProperty("user.dir"));
+	}
+
+	public static String username() {
+		return System.getProperty("user.name");
 	}
 
 }

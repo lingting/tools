@@ -27,7 +27,7 @@ import static live.lingting.tools.core.constant.FileConstants.POINT;
 @UtilityClass
 public class FileUtils {
 
-	private static final File TEMP_DIR = new File(SystemUtils.tmpDir(), "lingting.live");
+	private static final File TEMP_DIR = SystemUtils.tmpDirLingting();
 
 	private static final Map<String, String> MIME_TYPE;
 
@@ -193,6 +193,16 @@ public class FileUtils {
 		}
 
 		return Files.copy(source.toPath(), target.toPath(), list.toArray(new CopyOption[0]));
+	}
+
+	public static boolean delete(File file) {
+		try {
+			Files.delete(file.toPath());
+			return true;
+		}
+		catch (IOException e) {
+			return false;
+		}
 	}
 
 }
