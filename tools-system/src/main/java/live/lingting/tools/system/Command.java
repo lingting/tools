@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Command {
 
-	public static final String NEXT_LINE = SystemUtils.line();
+	public static final String NEXT_LINE = SystemUtils.lineSeparator();
 
 	public static final String EXIT_COMMAND = "exit";
 
