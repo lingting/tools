@@ -1,5 +1,7 @@
 package live.lingting.tools.core.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,6 +14,7 @@ import java.util.Set;
 /**
  * @author lingting
  */
+@UtilityClass
 public class CollectionUtils {
 
 	@SafeVarargs
@@ -43,8 +46,19 @@ public class CollectionUtils {
 		return obj instanceof Iterable || obj instanceof Iterator || obj.getClass().isArray();
 	}
 
-	public static ArrayList<Object> multiToList(Object obj) {
-		ArrayList<Object> list = new ArrayList<>();
+	public static Collection<Object> multiToList(Object obj) {
+		if (obj == null) {
+			return new ArrayList<>();
+		}
+
+		if (!isMulti(obj)) {
+			return toList(obj);
+		}
+		else if (obj instanceof Collection) {
+			return (Collection<Object>) obj;
+		}
+
+		List<Object> list = new ArrayList<>();
 
 		if (obj.getClass().isArray()) {
 			Collections.addAll(list, (Object[]) obj);

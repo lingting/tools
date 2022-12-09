@@ -1,6 +1,7 @@
 package live.lingting.tools.core.util;
 
 import live.lingting.tools.core.constant.StringConstants;
+import lombok.experimental.UtilityClass;
 
 import java.io.CharArrayWriter;
 import java.util.Iterator;
@@ -8,6 +9,7 @@ import java.util.Iterator;
 /**
  * @author lingting
  */
+@UtilityClass
 public class StringUtils {
 
 	/**
@@ -15,7 +17,7 @@ public class StringUtils {
 	 * @param str 字符串
 	 * @return boolean
 	 */
-	public static boolean hasText(String str) {
+	public static boolean hasText(CharSequence str) {
 		if (str == null || str.length() < 1) {
 			return false;
 		}
@@ -54,10 +56,8 @@ public class StringUtils {
 	 * @return boolean
 	 */
 	public static boolean isXml(String str) {
-		if (hasText(str)) {
-			if (str.startsWith(StringConstants.ANGLE_BRACKETS_LEFT)) {
-				return str.endsWith(StringConstants.ANGLE_BRACKETS_RIGHT);
-			}
+		if (hasText(str) && str.startsWith(StringConstants.ANGLE_BRACKETS_LEFT)) {
+			return str.endsWith(StringConstants.ANGLE_BRACKETS_RIGHT);
 		}
 
 		return false;

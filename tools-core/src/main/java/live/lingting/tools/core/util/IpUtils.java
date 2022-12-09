@@ -74,8 +74,8 @@ public class IpUtils {
 			return false;
 		}
 		return switch (ip) {
-			case "[0:0:0:0:0:0:0:1]", "0:0:0:0:0:0:0:1", LOCALHOST, "localhost" -> true;
-			default -> false;
+		case "[0:0:0:0:0:0:0:1]", "0:0:0:0:0:0:0:1", LOCALHOST, "localhost" -> true;
+		default -> false;
 		};
 	}
 
