@@ -8,6 +8,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class StringConstants {
 
+	public static final String EMPTY = "";
+
 	/**
 	 * 花括号
 	 */
@@ -33,5 +35,11 @@ public class StringConstants {
 	 * 其他
 	 */
 	public static final String CR_LF = "\r\n";
+
+	public static final String GET = "get";
+
+	public static final String SET = "set";
+
+	public static final String IS = "is";
 
 }
