@@ -66,7 +66,7 @@ public class ThreadPool {
 	}
 
 	@RequiredArgsConstructor
-    @SuppressWarnings("java:S1181")
+	@SuppressWarnings("java:S1181")
 	public static class ExceptionRunnable implements Runnable {
 
 		private final Runnable runnable;

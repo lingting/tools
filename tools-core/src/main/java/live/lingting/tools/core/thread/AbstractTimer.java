@@ -31,7 +31,8 @@ public abstract class AbstractTimer extends Thread implements ContextComponent {
 	/**
 	 * 执行任务
 	 */
-	protected abstract void process();
+	@SuppressWarnings("java:S112")
+	protected abstract void process() throws Exception;
 
 	/**
 	 * 线程被中断触发.
