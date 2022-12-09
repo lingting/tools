@@ -19,7 +19,6 @@
         <module>tools-system</module>
         <module>tools-oss</module>
         <module>tools-spring</module>
-        <module>tools-security</module>
     </modules>
 
     <properties>
