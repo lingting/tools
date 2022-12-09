@@ -26,7 +26,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 public class ToolsSpringAutoConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean(ObjectMapper.class)
+	@ConditionalOnMissingBean
 	@ConditionalOnClass({ Jackson2ObjectMapperBuilder.class })
 	public ObjectMapper toolsObjectMapper(Jackson2ObjectMapperBuilder builder) {
 		ObjectMapper mapper = builder.createXmlMapper(false).build();
