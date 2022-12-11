@@ -77,7 +77,7 @@ public class ThreadPool {
 				runnable.run();
 			}
 			catch (Throwable e) {
-				log.debug("线程发生异常!", e);
+				log.error("线程发生异常!", e);
 				if (!(e instanceof Exception)) {
 					throw e;
 				}
