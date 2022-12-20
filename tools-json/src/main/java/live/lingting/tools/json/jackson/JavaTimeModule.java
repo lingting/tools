@@ -1,7 +1,6 @@
 package live.lingting.tools.json.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.PackageVersion;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
@@ -23,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 public class JavaTimeModule extends SimpleModule {
 
 	public JavaTimeModule() {
-		super(PackageVersion.VERSION);
 		this.addSerializer(LocalDateTime.class,
 				new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)));
 		this.addSerializer(LocalDate.class,
