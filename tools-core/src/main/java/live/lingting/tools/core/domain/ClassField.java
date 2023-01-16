@@ -40,10 +40,12 @@ public class ClassField {
 	 * @return boolean true 表示拥有
 	 */
 	public <T extends Annotation> T getAnnotation(Class<T> a) {
-		T annotation = field.getAnnotation(a);
-		if (annotation != null) {
+		T annotation;
+		// 字段上找到了
+		if (field != null && (annotation = field.getAnnotation(a)) != null) {
 			return annotation;
 		}
+		// 方法上找
 		return method == null ? null : method.getAnnotation(a);
 	}
 
@@ -58,6 +60,10 @@ public class ClassField {
 			return invokeMethod.invoke(obj);
 		}
 		return getField().get(obj);
+	}
+
+	public Class<?> getValueType() {
+		return field == null ? method.getReturnType() : field.getType();
 	}
 
 }
