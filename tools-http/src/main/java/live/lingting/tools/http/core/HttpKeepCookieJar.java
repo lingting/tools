@@ -37,8 +37,8 @@ public class HttpKeepCookieJar implements CookieJar {
 		}
 	}
 
-	public void addCookie(String host, Cookie cookie) {
-		cache.computeIfAbsent(host, k -> new ArrayList<>()).add(cookie);
+	public void addCookie(String domain, Cookie cookie) {
+		cache.computeIfAbsent(domain, k -> new ArrayList<>()).add(cookie);
 	}
 
 }

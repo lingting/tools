@@ -78,7 +78,7 @@ public class ClassUtils {
 	 * @return java.util.Set<java.lang.Class < T>>
 	 */
 	@SuppressWarnings("java:S3776")
-    public static <T> Set<Class<T>> scan(String basePack, Predicate<Class<T>> filter,
+	public static <T> Set<Class<T>> scan(String basePack, Predicate<Class<T>> filter,
 			BiConsumer<String, Exception> error) throws IOException {
 		List<String> classNames = new ArrayList<>();
 		String clsPath = basePack.replace(".", "/");

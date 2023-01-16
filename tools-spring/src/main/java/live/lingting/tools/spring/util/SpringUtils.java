@@ -1,6 +1,8 @@
 package live.lingting.tools.spring.util;
 
+import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
@@ -8,10 +10,12 @@ import java.util.Map;
 /**
  * @author lingting 2022/10/15 15:21
  */
+@UtilityClass
 public class SpringUtils {
 
 	@Setter
-	protected static ApplicationContext context;
+	@Getter
+	private static ApplicationContext context;
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getBean(String name) {
