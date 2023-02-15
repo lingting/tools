@@ -70,6 +70,18 @@ public class LocalDateTimeUtils {
 		return dateTime.toInstant(offset).toEpochMilli();
 	}
 
+	public static String format(LocalDateTime dateTime) {
+		return format(dateTime, FORMATTER_YMD_HMS);
+	}
+
+	public static String format(LocalDateTime dateTime, String formatter) {
+		return format(dateTime, DateTimeFormatter.ofPattern(formatter));
+	}
+
+	public static String format(LocalDateTime dateTime, DateTimeFormatter formatter) {
+		return formatter.format(dateTime);
+	}
+
 	// endregion
 
 	// region LocalDate
@@ -77,11 +89,35 @@ public class LocalDateTimeUtils {
 		return LocalDate.parse(str, FORMATTER_YMD);
 	}
 
+	public static String format(LocalDate date) {
+		return format(date, FORMATTER_YMD);
+	}
+
+	public static String format(LocalDate date, String formatter) {
+		return format(date, DateTimeFormatter.ofPattern(formatter));
+	}
+
+	public static String format(LocalDate date, DateTimeFormatter formatter) {
+		return formatter.format(date);
+	}
+
 	// endregion
 
 	// region LocalTime
 	public static LocalTime parseTime(String str) {
 		return LocalTime.parse(str, FORMATTER_HMS);
+	}
+
+	public static String format(LocalTime time) {
+		return format(time, FORMATTER_HMS);
+	}
+
+	public static String format(LocalTime time, String formatter) {
+		return format(time, DateTimeFormatter.ofPattern(formatter));
+	}
+
+	public static String format(LocalTime time, DateTimeFormatter formatter) {
+		return formatter.format(time);
 	}
 
 	// endregion
