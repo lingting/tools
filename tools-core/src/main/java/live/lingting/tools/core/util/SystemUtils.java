@@ -17,7 +17,27 @@ public class SystemUtils {
 	 * @return boolean
 	 */
 	public static boolean isWindows() {
-		return System.getProperty("os.name").contains("Windows");
+		return osName().contains("Windows");
+	}
+
+	public static boolean isLinux() {
+		return osName().contains("Linux");
+	}
+
+	public static boolean isMacX() {
+		return osName().contains("OS X");
+	}
+
+	public static boolean isMac() {
+		return osName().contains("Mac OS");
+	}
+
+	public static boolean isAix() {
+		return osName().contains("AIX");
+	}
+
+	public static String osName() {
+		return System.getProperty("os.name");
 	}
 
 	/**
